@@ -3,7 +3,7 @@ from typing import Dict, List, Optional, Any
 from tavily import TavilyClient
 
 def web_search(query: str, search_depth: str = "basic", include_domains: Optional[List[str]] = None, exclude_domains: Optional[List[str]] = None) -> Dict:
-    """Perform a web search using Tavily API.
+    """Perform a web search using Tavily API for any external information you need.
     
     Args:
         query: Search query string

@@ -21,10 +21,6 @@ This project implements a sophisticated agent system with the following capabili
 - Support for multiple countries
 - Categories: business, entertainment, general, health, science, sports, technology
 
-### 🎭 Entertainment
-- **Random Quotes**: Get inspirational quotes with author information
-- **Jokes**: Fetch random jokes (single or two-part jokes)
-
 ### 💰 Financial Data
 - **Cryptocurrency Prices**: Get real-time crypto prices
 - Support for major cryptocurrencies (Bitcoin, Ethereum, etc.)
@@ -46,6 +42,87 @@ This project implements a sophisticated agent system with the following capabili
 - **Academic Search**: Search for research papers and academic content
 - Support for domain filtering and search depth control
 
+### NASA Astronomy Picture of the Day
+
+#### `get_nasa_apod() -> Dict`
+Gets NASA Astronomy Picture of the Day (APOD).
+```python
+apod = get_nasa_apod()
+# Returns: {"title": ..., "date": ..., "explanation": ..., "url": ..., ...}
+```
+
+### Wikipedia Tools
+
+#### `get_wikipedia_summary(query: str) -> Dict`
+Gets a summary for a topic from Wikipedia.
+```python
+summary = get_wikipedia_summary("Python (programming language)")
+# Returns: {"title": ..., "summary": ..., "url": ...}
+```
+
+### Public Holidays
+
+#### `get_public_holidays(country_code: str, year: Optional[int] = None) -> List[Dict]`
+Gets public holidays for a country and year.
+```python
+holidays = get_public_holidays("IN", 2024)
+# Returns: list of holidays with date, localName, name, etc.
+```
+
+### GitHub Trending
+
+#### `get_trending_github_repos(language: str = "python") -> List[Dict]`
+Gets trending GitHub repositories for a given language (most starred in the last week).
+```python
+repos = get_trending_github_repos("javascript")
+# Returns: list of repos with name, full_name, html_url, description, stars, etc.
+```
+
+### URL Shortener
+
+#### `shorten_url(url: str) -> Dict`
+Shortens a URL using TinyURL API.
+```python
+short = shorten_url("https://example.com")
+# Returns: {"short_url": ...}
+```
+
+### QR Code Generator
+
+#### `generate_qr_code(data: str) -> Dict`
+Generates a QR code for the given data using goqr.me API.
+```python
+qr = generate_qr_code("hello world")
+# Returns: {"qr_code_url": ...}
+```
+
+### Timezone Converter
+
+#### `get_current_timezone(timezone: str) -> Dict`
+Gets the full current time and timezone info for a given time zone using WorldTimeAPI.
+```python
+timeinfo = get_current_timezone("Asia/Kolkata")
+# Returns: {"datetime": ..., "utc_offset": ..., ...}
+```
+
+### Unit Converter
+
+#### `convert_unit(value: float, from_unit: str, to_unit: str) -> Dict`
+Converts units (length, mass, temperature, etc.).
+```python
+result = convert_unit(1000, "meter", "kilometer")
+# Returns: {"value": 1000, "from": "meter", "to": "kilometer", "result": 1.0}
+```
+
+### Indian Land Unit Converter
+
+#### `convert_land_unit(value: float, from_unit: str, to_unit: str, region: Optional[str] = None) -> Dict`
+Converts Indian land units, supporting regional variations for bigha, biswa, katha, etc.
+```python
+result = convert_land_unit(2, "bigha", "acre", region="up_west")
+# Returns: {"value": 2, "from": "bigha", "to": "acre", "region": "up_west", "result": ...}
+```
+
 ## 🏗️ Architecture
 
 The project follows a modular architecture with tools organized into logical categories:
@@ -54,14 +131,22 @@ The project follows a modular architecture with tools organized into logical cat
 lang-agent-multi-1/
 ├── tools/                          # Tool modules
 │   ├── __init__.py                 # Package initialization
-│   ├── math_tools.py              # Mathematical operations
-│   ├── weather_tools.py           # Weather information
-│   ├── news_tools.py              # News and articles
-│   ├── entertainment_tools.py     # Quotes and jokes
-│   ├── finance_tools.py           # Financial data
-│   ├── network_tools.py           # IP and location info
-│   ├── dictionary_tools.py        # Word definitions
-│   └── tavily_search.py           # Web search and research
+│   ├── math_tools.py               # Mathematical operations
+│   ├── weather_tools.py            # Weather information
+│   ├── news_tools.py               # News and articles
+│   ├── finance_tools.py            # Financial data
+│   ├── network_tools.py            # IP and location info
+│   ├── dictionary_tools.py         # Word definitions
+│   ├── tavily_search.py            # Web search and research
+│   ├── nasa_apod.py                # NASA APOD tool
+│   ├── wikipedia.py                # Wikipedia summary tool
+│   ├── public_holidays.py          # Public holidays lookup
+│   ├── github_trending.py          # GitHub trending repos
+│   ├── shorten_url.py              # URL shortener
+│   ├── qr_code.py                  # QR code generator
+│   ├── timezone_converter.py       # Timezone info
+│   ├── unit_converter.py           # General unit converter
+│   ├── convert_land_unit.py        # Indian land unit converter
 ├── agents.py                      # Main agent orchestration
 ├── langgraph.json                 # LangGraph configuration
 ├── requirements.txt               # Python dependencies
@@ -107,6 +192,7 @@ lang-agent-multi-1/
    OPENWEATHERMAP_API_KEY=your_openweathermap_api_key_here
    NEWS_API_KEY=your_news_api_key_here
    TAVILY_API_KEY=your_tavily_api_key_here
+   XRAPID_API_KEY=your_xrapid_api_key_here
    ```
    > **Tip:** You can get your LangSmith/LangChain API key from https://smith.langchain.com/ under your account settings. The same key works for both `LANGCHAIN_API_KEY` and `LANGSMITH_API_KEY`.
 
@@ -283,6 +369,7 @@ OPENAI_API_KEY=your_openai_api_key_here
 OPENWEATHERMAP_API_KEY=your_openweathermap_api_key_here
 NEWS_API_KEY=your_news_api_key_here
 TAVILY_API_KEY=your_tavily_api_key_here
+XRAPID_API_KEY=your_xrapid_api_key_here
 ```
 
 ## 🧪 Testing

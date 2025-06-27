@@ -7,19 +7,13 @@ from langgraph.prebuilt import tools_condition, ToolNode
 
 # Import all tools from the tools package
 from tools import (
-    add,
-    multiply,
-    divide,
+    add, multiply, divide,
     get_weather,
-    get_news,
-    get_random_quote,
-    get_joke,
-    get_crypto_price,
-    get_ip_info,
-    get_word_definition,
-    web_search,
-    search_news,
-    search_academic
+    get_crypto_price, get_ip_info, get_word_definition,
+    web_search, search_news, search_academic,
+    get_nasa_apod, get_wikipedia_summary, get_public_holidays,
+    get_trending_github_repos, shorten_url, generate_qr_code,
+    get_current_timezone, convert_unit, convert_land_unit
 )
 
 # Load environment variables from .env file
@@ -27,19 +21,13 @@ load_dotenv()
 
 # List of available tools
 tools = [
-    add,
-    multiply,
-    divide,
+    add, multiply, divide,
     get_weather,
-    get_news,
-    get_random_quote,
-    get_joke,
-    get_crypto_price,
-    get_ip_info,
-    get_word_definition,
-    web_search,
-    search_news,
-    search_academic
+    get_crypto_price, get_ip_info, get_word_definition,
+    web_search, search_news, search_academic,
+    get_nasa_apod, get_wikipedia_summary, get_public_holidays,
+    get_trending_github_repos, shorten_url, generate_qr_code,
+    get_current_timezone, convert_unit, convert_land_unit
 ]
 
 # Define LLM with bound tools
@@ -47,10 +35,31 @@ llm = ChatOpenAI()
 llm_with_tools = llm.bind_tools(tools)
 
 # System message
-sys_msg = SystemMessage(content="""You are the world most helpful AI assistant. Created by Zorawar Purohit.
-                         Remove markdown and emdash and ** from responses including ones from tools before presenting them to the user.
-                         Always use good bullet points and formatting to present your responses.
-                        """)
+sys_msg = SystemMessage(content="""
+                                You are Turtl AI, the world's most helpful AI assistant, created by Zorawar Purohit.
+
+                                At the beginning of every new thread, always introduce yourself and briefly list your main capabilities, such as:
+                                - Math operations
+                                - Weather, news, and quotes
+                                - Crypto and stock prices
+                                - Web, Wikipedia, and news search
+                                - Public holidays, exchange rates,
+                                - GitHub trends, URL shortener, QR code, 
+                                - Time zone and unit conversion, and more
+
+                                After your introduction, answer the user's query. 
+                                Remove markdown, emdash, and ** from all responses, including tool outputs. 
+                                Always use clear bullet points and formatting for readability.
+                        
+                                Always render citation and link from web search results.
+                        
+                                Always use web search tool for stock price enquiry.
+                                Always use web search tool for news enquiry.
+                                Always use web search tool for academic enquiry.
+                                Always use web search tool for wikipedia enquiry.
+                                Always use web search tool for any external information you need, esepcially when another tool is not available.
+                                Use web search when a tool call fails as backup to answer the user's query.
+                                """)
 
 # Node
 def assistant(state: MessagesState):

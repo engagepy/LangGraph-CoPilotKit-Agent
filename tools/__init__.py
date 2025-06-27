@@ -1,12 +1,20 @@
 # Import all tools from their respective modules
 from .math_tools import add, multiply, divide
 from .weather_tools import get_weather
-from .news_tools import get_news
-from .entertainment_tools import get_random_quote, get_joke
 from .finance_tools import get_crypto_price
 from .network_tools import get_ip_info
 from .dictionary_tools import get_word_definition
 from .tavily_search import web_search, search_news, search_academic
+from .nasa_apod import get_nasa_apod
+from .wikipedia import get_wikipedia_summary
+from .public_holidays import get_public_holidays
+from .github_trending import get_trending_github_repos
+from .shorten_url import shorten_url
+from .qr_code import generate_qr_code
+from .timezone_converter import get_current_timezone
+from .unit_converter import convert_unit
+from .convert_land_unit import convert_land_unit
+
 
 # Export all tools
 __all__ = [
@@ -14,13 +22,19 @@ __all__ = [
     'multiply', 
     'divide',
     'get_weather',
-    'get_news',
-    'get_random_quote',
-    'get_joke',
     'get_crypto_price',
     'get_ip_info',
     'get_word_definition',
     'web_search',
     'search_news',
-    'search_academic'
+    'search_academic',
+    'get_nasa_apod',
+    'get_wikipedia_summary',
+    'get_public_holidays',
+    'get_trending_github_repos',
+    'shorten_url',
+    'generate_qr_code',
+    'get_current_timezone',
+    'convert_unit',
+    'convert_land_unit'
 ] 
