@@ -73,6 +73,7 @@ lang-agent-multi-1/
 ### Prerequisites
 - Python 3.11 or higher
 - pip package manager
+- **LangSmith/LangChain API Keys** (see below)
 
 ### Setup Instructions
 
@@ -96,14 +97,24 @@ lang-agent-multi-1/
 4. **Set up environment variables**
    Create a `.env` file in the project root with the following variables:
    ```env
+   # Essential for LangGraph, LangSmith, and LangChain
+   LANGCHAIN_API_KEY=your_langchain_api_key_here
+   LANGSMITH_API_KEY=your_langsmith_api_key_here
+   LANGCHAIN_TRACING_V2=true
+
+   # LLM and tool APIs
    OPENAI_API_KEY=your_openai_api_key_here
    OPENWEATHERMAP_API_KEY=your_openweathermap_api_key_here
    NEWS_API_KEY=your_news_api_key_here
    TAVILY_API_KEY=your_tavily_api_key_here
    ```
+   > **Tip:** You can get your LangSmith/LangChain API key from https://smith.langchain.com/ under your account settings. The same key works for both `LANGCHAIN_API_KEY` and `LANGSMITH_API_KEY`.
 
 ### API Keys Required
 
+- **LANGCHAIN_API_KEY**: Required for LangGraph and LangChain functionality (get from LangSmith)
+- **LANGSMITH_API_KEY**: Required for LangSmith functionality (same as above)
+- **LANGCHAIN_TRACING_V2**: Set to `true` to enable advanced tracing and debugging
 - **OpenAI API Key**: Required for the LLM functionality
 - **OpenWeatherMap API Key**: Required for weather information (free tier available)
 - **News API Key**: Required for news articles (free tier available)
@@ -262,10 +273,13 @@ papers = search_academic("machine learning applications", include_domains=["arxi
 
 ### Environment Variables (`.env`)
 ```env
-# Required
-OPENAI_API_KEY=your_openai_api_key_here
+# Essential for LangGraph, LangSmith, and LangChain
+LANGCHAIN_API_KEY=your_langchain_api_key_here
+LANGSMITH_API_KEY=your_langsmith_api_key_here
+LANGCHAIN_TRACING_V2=true
 
-# Optional (for enhanced functionality)
+# LLM and tool APIs
+OPENAI_API_KEY=your_openai_api_key_here
 OPENWEATHERMAP_API_KEY=your_openweathermap_api_key_here
 NEWS_API_KEY=your_news_api_key_here
 TAVILY_API_KEY=your_tavily_api_key_here
@@ -325,6 +339,9 @@ for message in test_messages:
 2. **Missing API Keys**
    - Ensure all required API keys are set in `.env`
    - Some tools will work without API keys (math, quotes, jokes)
+   - **LANGCHAIN_API_KEY** and **LANGSMITH_API_KEY** are essential for LangGraph and LangSmith features
+   - **LANGCHAIN_TRACING_V2** should be set to `true` for best tracing/debugging
+   - Get your LangSmith/LangChain API key from https://smith.langchain.com/
 
 3. **Import Errors**
    - Ensure virtual environment is activated
@@ -343,7 +360,8 @@ for message in test_messages:
 
 Enable debug output by setting environment variables:
 ```bash
-export LANGGRAPH_DEBUG=1
+export LANGCHAIN_TRACING_V2=true
+export LANGCHAIN_API_KEY=your_langchain_api_key_here
 langgraph dev
 ```
 
@@ -373,6 +391,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 - **LangGraph**: For the powerful graph-based agent framework
 - **LangChain**: For the LLM integration capabilities
+- **LangSmith**: For tracing, observability, and API key management
 - **OpenAI**: For the GPT models
 - **Tavily**: For the web search API
 - **OpenWeatherMap**: For weather data API
