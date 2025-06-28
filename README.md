@@ -492,6 +492,103 @@ For issues and questions:
 2. Review the LangGraph documentation
 3. Open an issue on the repository
 
+## 🧑‍💻 CopilotKit Integration & Frontend Spin-Up
+
+This project includes a modern Next.js frontend powered by [CopilotKit](https://copilotkit.ai), which provides a beautiful UI and connects seamlessly to the LangGraph agent backend.
+
+### How It Works
+- The frontend (in `web/`) uses CopilotKit to communicate with the LangGraph agent running at `http://localhost:2024` (or `127.0.0.1:2024`).
+- The integration is handled via an API route at `/api/copilotkit`, which proxies requests from the frontend to the backend agent.
+- The key integration code is in [`web/app/api/copilotkit/route.ts`]:
+
+```ts
+import {
+  CopilotRuntime,
+  ExperimentalEmptyAdapter,
+  copilotRuntimeNextJSAppRouterEndpoint,
+  LangGraphAgent
+} from "@copilotkit/runtime";
+import { NextRequest } from "next/server";
+
+const serviceAdapter = new ExperimentalEmptyAdapter();
+
+const runtime = new CopilotRuntime({
+  agents: {
+    agent: new LangGraphAgent({
+      deploymentUrl: "http://127.0.0.1:2024", // or "http://localhost:2024"
+      graphId: "agent"
+    })
+  }
+});
+
+export const POST = async (req: NextRequest) => {
+  const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
+    runtime,
+    serviceAdapter,
+    endpoint: "/api/copilotkit",
+  });
+
+  return handleRequest(req);
+};
+```
+
+### How to Run the Frontend
+
+1. **Install dependencies** (only needed once):
+   ```bash
+   cd web
+   npm install
+   ```
+2. **Start the frontend development server:**
+   ```bash
+   npm run dev
+   ```
+   This will start the Next.js app at [http://localhost:3000](http://localhost:3000).
+
+> **Note:** The LangGraph backend agent must be running at `http://localhost:2024` for the CopilotKit frontend to function.
+
+### Full Stack Spin-Up (Backend + Frontend)
+
+1. **Start the LangGraph agent backend:**
+   ```bash
+   langgraph dev --host localhost --port 2024
+   ```
+2. **Start the CopilotKit Next.js frontend:**
+   ```bash
+   cd web
+   npm install  # only needed once
+   npm run dev
+   ```
+
+You can now access the full multi-agent system with a modern UI at [http://localhost:3000](http://localhost:3000).
+
+### Frontend Environment Variables
+
+The CopilotKit-powered frontend requires some environment variables to be set in a `.env.local` file in the `web/` directory. You can use the provided `web/.env copy.local` as a template:
+
+```env
+# CopilotKit Configuration
+# Replace with your actual CopilotKit Cloud API key
+NEXT_PUBLIC_COPILOT_API_KEY=
+
+# Your local LangGraph dev server URL
+NEXT_PUBLIC_COPILOTKIT_RUNTIME_URL=http://localhost:2024
+
+# Your LangGraph agent name (matches agents.py)
+NEXT_PUBLIC_COPILOTKIT_AGENT_NAME=agent
+```
+
+- `NEXT_PUBLIC_COPILOT_API_KEY`: (Optional for local/dev) Your CopilotKit Cloud API key, if using CopilotKit Cloud features.
+- `NEXT_PUBLIC_COPILOTKIT_RUNTIME_URL`: The URL of your running LangGraph backend (default: `http://localhost:2024`).
+- `NEXT_PUBLIC_COPILOTKIT_AGENT_NAME`: The agent name as defined in your backend (default: `agent`).
+
+**To set up:**
+1. Copy the template:
+   ```bash
+   cp .env\ copy.local .env.local
+   ```
+2. Edit `.env.local` and fill in any required values.
+
 ---
 
 **Happy coding! 🚀**
