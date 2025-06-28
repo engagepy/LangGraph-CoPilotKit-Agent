@@ -9,6 +9,7 @@ export type WeatherCardProps = {
   humidity?: string;
   wind?: string;
   feelsLike?: string;
+  textColor?: string;
 };
 
 function SunIcon() {
@@ -28,29 +29,31 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
   humidity = "45%",
   wind = "5 mph",
   feelsLike = "72°",
+  textColor = "#fff",
 }) => {
   return (
     <BaseCard
-      icon={<SunIcon />}
+      icon={<span style={{ color: textColor }}><SunIcon /></span>}
       title={location}
       subtitle="Current Weather"
-      mainValue={<span className="text-4xl">{temperature}</span>}
-      details={<span>{description}</span>}
+      mainValue={<span className="text-4xl" style={{ color: textColor }}>{temperature}</span>}
+      details={<span style={{ color: textColor }}>{description}</span>}
       themeColor={themeColor}
+      textColor={textColor}
     >
-      <div className="mt-4 pt-4 border-t border-white/30">
+      <div className="mt-4 pt-4 border-t" style={{ borderColor: textColor, opacity: 0.3 }}>
         <div className="grid grid-cols-3 gap-2 text-center">
           <div>
-            <p className="text-white text-xs">Humidity</p>
-            <p className="text-white font-medium">{humidity}</p>
+            <p className="text-xs" style={{ color: textColor }}>Humidity</p>
+            <p className="font-medium" style={{ color: textColor }}>{humidity}</p>
           </div>
           <div>
-            <p className="text-white text-xs">Wind</p>
-            <p className="text-white font-medium">{wind}</p>
+            <p className="text-xs" style={{ color: textColor }}>Wind</p>
+            <p className="font-medium" style={{ color: textColor }}>{wind}</p>
           </div>
           <div>
-            <p className="text-white text-xs">Feels Like</p>
-            <p className="text-white font-medium">{feelsLike}</p>
+            <p className="text-xs" style={{ color: textColor }}>Feels Like</p>
+            <p className="font-medium" style={{ color: textColor }}>{feelsLike}</p>
           </div>
         </div>
       </div>

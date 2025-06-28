@@ -1,8 +1,8 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import { useCoAgent, useCopilotAction } from "@copilotkit/react-core";
 import { CopilotKitCSSProperties, CopilotSidebar } from "@copilotkit/react-ui";
-import { useState } from "react";
 import { ToolResultCard, ToolCard } from "../components/ToolResultCards";
 import { SearchCard } from "../components/SearchCard";
 import { MathCard } from "../components/MathCard";
@@ -20,8 +20,58 @@ import WeatherCard from "../components/WeatherCard";
 import NewsCard from "../components/NewsCard";
 import IPCard from "../components/IPCard";
 
+// Tool result types
+type WeatherResult = {
+  id: string;
+  type: 'weather';
+  location: string;
+  temperature?: string;
+  description?: string;
+  humidity?: string;
+  wind?: string;
+  feelsLike?: string;
+  timestamp: number;
+};
+
+type ToolResult = WeatherResult; // Will extend this for other tools
+
+// State of the agent, make sure this aligns with your agent's state.
+type AgentState = {
+  proverbs: string[];
+  chatStarted: boolean;
+  toolResults: ToolResult[];
+}
+
+// Utility to check if a color is light
+function isColorLight(hex: string): boolean {
+  hex = hex.replace('#', '');
+  if (hex.length === 3) hex = hex.split('').map((x: string) => x + x).join('');
+  const r = parseInt(hex.substr(0,2),16);
+  const g = parseInt(hex.substr(2,2),16);
+  const b = parseInt(hex.substr(4,2),16);
+  return (0.299*r + 0.587*g + 0.114*b) > 186;
+}
+
 export default function CopilotKitPage() {
   const [themeColor, setThemeColor] = useState("#6366f1");
+
+  // Add a button to manually test theme color change
+  const presetColors = [
+    "#f5e8ff", // Pastel Lavender
+    "#ffe4e1", // Pastel Pink
+    "#e0f7fa", // Pastel Cyan
+    "#fff9c4", // Pastel Yellow
+    "#d0f5e8", // Pastel Mint
+    "#fce4ec", // Pastel Rose
+    "#e3f2fd", // Pastel Blue
+    "#f3e5f5", // Pastel Purple
+  ];
+  const [colorIndex, setColorIndex] = useState(0);
+  const handleCycleColor = () => {
+    const nextIndex = (colorIndex + 1) % presetColors.length;
+    setColorIndex(nextIndex);
+    setThemeColor(presetColors[nextIndex]);
+  };
 
   // 🪁 Frontend Actions: https://docs.copilotkit.ai/guides/frontend-actions
   useCopilotAction({
@@ -36,27 +86,60 @@ export default function CopilotKitPage() {
     },
   });
 
+  const isLightBg = isColorLight(themeColor);
+  const textColor = isLightBg ? "#222" : "#fff";
+
   return (
-    <main style={{ "--copilot-kit-primary-color": themeColor } as CopilotKitCSSProperties}>
-      <YourMainContent themeColor={themeColor} />
-      <CopilotSidebar
-        clickOutsideToClose={false}
-        defaultOpen={true}
-        labels={{
-          title: "Popup Assistant",
-          initial: "👋 Hi, there! You're chatting with an agent. This agent comes with a few tools to get you started.\n\nFor example you can try:\n- **Frontend Tools**: \"Set the theme to orange\"\n- **Shared State**: \"Write a proverb about AI\"\n- **Generative UI**: \"Get the weather in SF\"\n- **Web Search**: \"Search for latest AI news\"\n- **Math Tools**: \"Calculate 15% of 250\"\n- **Weather**: \"What's the weather in Tokyo?\"\n- **Currency**: \"Convert 100 USD to EUR\"\n- **NASA APOD**: \"Show me today's NASA picture\"\n\nAs you interact with the agent, you'll see the UI update in real-time to reflect the agent's **state**, **tool calls**, and **progress**."
+    <div
+      style={{
+        "--copilot-kit-primary-color": themeColor,
+        backgroundColor: themeColor,
+        color: textColor,
+        '--sidebar-text-color': textColor,
+      }}
+      className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]"
+    >
+      {/* Manual theme color test button */}
+      <button
+        onClick={handleCycleColor}
+        className="fixed top-4 left-4 z-50 px-5 py-2 rounded-full font-semibold shadow-lg border border-gray-200 transition-colors duration-200"
+        style={{
+          background: "#fff",
+          color: "#444",
+          boxShadow: "0 2px 12px 0 rgba(0,0,0,0.08)",
+          fontSize: "1rem",
+          letterSpacing: "0.01em",
         }}
-      />
-    </main>
+      >
+        Cycle Theme Color
+      </button>
+      {/* Sidebar - overlay style */}
+      <div className="peer">
+        <CopilotSidebar
+          clickOutsideToClose={false}
+          defaultOpen={true}
+          labels={{
+            title: "Turtl.ai",
+            initial: "👋 Hi, there! You're chatting with an agent. This agent comes with a few tools to get you started.\n\nFor example you can try:\n- **Frontend Tools**: \"Set the theme to orange\"\n- **Shared State**: \"Write a proverb about AI\"\n- **Generative UI**: \"Get the weather in SF\"\n- **Web Search**: \"Search for latest AI news\"\n- **Math Tools**: \"Calculate 15% of 250\"\n- **Weather**: \"What's the weather in Tokyo?\"\n- **Currency**: \"Convert 100 USD to EUR\"\n- **NASA APOD**: \"Show me today's NASA picture\"\n\nAs you interact with the agent, you'll see the UI update in real-time to reflect the agent's **state**, **tool calls**, and **progress**."
+          }}
+        />
+      </div>
+      
+      {/* Main Content Area - always centered, overlay safe */}
+      <div
+        className="absolute inset-0 flex justify-center items-center transition-all duration-300"
+      >
+        <YourMainContent themeColor={themeColor} textColor={textColor} />
+      </div>
+
+      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
+        {/* ... existing code ... */}
+      </footer>
+    </div>
   );
 }
 
-// State of the agent, make sure this aligns with your agent's state.
-type AgentState = {
-  proverbs: string[];
-}
-
-function YourMainContent({ themeColor }: { themeColor: string }) {
+function YourMainContent({ themeColor, textColor }: { themeColor: string; textColor: string }) {
   // 🪁 Shared State: https://docs.copilotkit.ai/coagents/shared-state
   const {state, setState} = useCoAgent<AgentState>({
     name: "agent", // This matches your NEXT_PUBLIC_COPILOTKIT_AGENT_NAME
@@ -64,10 +147,26 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
       proverbs: [
         "CopilotKit may be new, but its the best thing since sliced bread.",
       ],
+      chatStarted: false,
+      toolResults: [],
     },
   })
 
+  // Helper function to add tool result - removed, using direct setState in handlers
+
   // 🪁 Frontend Actions: https://docs.copilotkit.ai/coagents/frontend-actions
+  useCopilotAction({
+    name: "startChat",
+    description: "Start the chat session and show tool results area.",
+    parameters: [],
+    handler: () => {
+      setState({
+        ...state,
+        chatStarted: true,
+      });
+    },
+  });
+
   useCopilotAction({
     name: "addProverb",
     parameters: [{
@@ -78,12 +177,11 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
     handler: ({ proverb }) => {
       setState({
         ...state,
+        chatStarted: true,
         proverbs: [...state.proverbs, proverb],
       });
     },
   });
-
-
 
   //🪁 Generative UI: https://docs.copilotkit.ai/coagents/generative-ui
   // Weather UI Component
@@ -98,10 +196,41 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
       { name: "wind", type: "string", required: false },
       { name: "feels_like", type: "string", required: false },
     ],
+    handler: ({ location, temperature, description, humidity, wind, feels_like }) => {
+      console.log("Weather handler called with:", { location, temperature, description, humidity, wind, feels_like });
+      
+      // Add to main area tool results
+      const weatherResult: WeatherResult = {
+        id: `weather-${Date.now()}`,
+        type: 'weather',
+        location: location || "",
+        temperature,
+        description,
+        humidity,
+        wind,
+        feelsLike: feels_like,
+        timestamp: Date.now()
+      };
+      
+      console.log("Adding weather result:", weatherResult);
+      console.log("Current state before update:", state);
+      
+      // Force the state update
+      const newState = {
+        ...state,
+        chatStarted: true,
+        toolResults: [weatherResult, ...state.toolResults]
+      };
+      
+      console.log("New state:", newState);
+      setState(newState);
+    },
     render: ({ args }) => {
+      console.log("Weather render called with args:", args);
       return <WeatherCard 
         location={args.location || ""} 
         themeColor={themeColor}
+        textColor={textColor}
         temperature={args.temperature}
         description={args.description}
         humidity={args.humidity}
@@ -111,32 +240,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
     },
   });
 
-  // Web Search Results UI Component
-  useCopilotAction({
-    name: "web_search",
-    description: "Display web search results.",
-    parameters: [
-      { name: "query", type: "string", required: true },
-      { name: "answer", type: "string", required: false },
-      { name: "results", type: "string", required: true }, // JSON string of results array
-    ],
-    render: ({ args }) => {
-      let results;
-      try {
-        results = typeof args.results === 'string' ? JSON.parse(args.results) : args.results;
-      } catch (e) {
-        results = args.results;
-      }
-      
-      return <SearchCard
-        type="web"
-        query={args.query as string}
-        answer={args.answer as string}
-        results={Array.isArray(results) ? results : results ? [results] : undefined}
-        themeColor={themeColor}
-      />
-    },
-  });
+  // More tool actions will be added here later...
 
   // IP Information UI Component
   useCopilotAction({
@@ -153,6 +257,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
         location={args.location}
         isp={args.isp}
         themeColor={themeColor}
+        textColor={textColor}
       />
     },
   });
@@ -172,6 +277,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
         result={args.result as string}
         expression={args.expression as string}
         themeColor={themeColor}
+        textColor={textColor}
       />
     },
   });
@@ -191,6 +297,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
         price={args.price as string}
         change24h={args.change_24h as string}
         themeColor={themeColor}
+        textColor={textColor}
       />
     },
   });
@@ -212,6 +319,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
         url={args.url as string}
         explanation={args.explanation as string}
         themeColor={themeColor}
+        textColor={textColor}
       />
     },
   });
@@ -241,6 +349,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
         country={args.country as string}
         holidays={holidayArray}
         themeColor={themeColor}
+        textColor={textColor}
       />
     },
   });
@@ -263,6 +372,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
         toUnit={args.to_unit as string}
         type="general"
         themeColor={themeColor}
+        textColor={textColor}
       />
     },
   });
@@ -281,6 +391,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
         result={args.result as string}
         expression={args.expression as string}
         themeColor={themeColor}
+        textColor={textColor}
       />
     },
   });
@@ -298,6 +409,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
         result={args.result as string}
         expression={args.expression as string}
         themeColor={themeColor}
+        textColor={textColor}
       />
     },
   });
@@ -315,6 +427,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
         result={args.result as string}
         expression={args.expression as string}
         themeColor={themeColor}
+        textColor={textColor}
       />
     },
   });
@@ -334,6 +447,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
         summary={args.summary as string}
         url={args.url as string}
         themeColor={themeColor}
+        textColor={textColor}
       />
     },
   });
@@ -358,6 +472,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
       return <GitHubCard
         repos={repoArray}
         themeColor={themeColor}
+        textColor={textColor}
       />
     },
   });
@@ -375,6 +490,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
         qrCodeUrl={args.qr_code_url as string}
         data={args.content as string}
         themeColor={themeColor}
+        textColor={textColor}
       />
     },
   });
@@ -392,6 +508,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
         shortUrl={args.short_url as string}
         originalUrl={args.original_url as string}
         themeColor={themeColor}
+        textColor={textColor}
       />
     },
   });
@@ -411,6 +528,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
         time={args.time as string}
         location={args.location as string}
         themeColor={themeColor}
+        textColor={textColor}
       />
     },
   });
@@ -432,6 +550,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
         partOfSpeech={args.part_of_speech as string}
         example={args.example as string}
         themeColor={themeColor}
+        textColor={textColor}
       />
     },
   });
@@ -459,6 +578,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
         answer={args.answer as string}
         results={Array.isArray(results) ? results : results ? [results] : undefined}
         themeColor={themeColor}
+        textColor={textColor}
       />
     },
   });
@@ -486,6 +606,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
         answer={args.answer as string}
         results={Array.isArray(results) ? results : results ? [results] : undefined}
         themeColor={themeColor}
+        textColor={textColor}
       />
     },
   });
@@ -508,28 +629,78 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
         toUnit={args.to_unit as string}
         type="land"
         themeColor={themeColor}
+        textColor={textColor}
       />
     },
   });
 
-  // Show the main content with your beautiful tool cards
+  // Debug: Log state changes
+  console.log("Main component render - state:", state);
+
+  // Show the main content with your beautiful tool cards or tool results
   return (
     <div
       style={{ backgroundColor: themeColor }}
-      className="h-screen w-screen flex justify-center items-center flex-col transition-colors duration-300 overflow-hidden"
+      className="h-screen w-full flex justify-center items-center flex-col transition-colors duration-300 overflow-hidden"
     >
-      <div className="bg-white/20 backdrop-blur-md p-8 rounded-2xl shadow-xl max-w-5xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-        <ExampleCards themeColor={themeColor} />
-      </div>
+      {!state.chatStarted ? (
+        // Landing screen with example cards
+        <div className="bg-white/20 backdrop-blur-md p-8 rounded-2xl shadow-xl max-w-5xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+          <ExampleCards themeColor={themeColor} />
+        </div>
+      ) : (
+        // Tool results area
+        <div className="w-full h-full p-6 overflow-y-auto">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-white mb-6 text-center">Welcome to Turtl.ai</h2>
+            
+            {state.toolResults.length === 0 ? (
+              <div className="bg-white/20 backdrop-blur-md p-8 rounded-2xl shadow-xl text-center">
+                <p className="text-white/80 text-lg">Tool results will appear here as you interact with the assistant...</p>
+                <p className="text-white/60 text-sm mt-2">Try asking: "What's the weather in San Francisco?"</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {state.toolResults.map((result: ToolResult) => (
+                  <ToolResultRenderer key={result.id} result={result} themeColor={themeColor} textColor={textColor} />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
+}
+
+// Component to render individual tool results
+function ToolResultRenderer({ result, themeColor, textColor }: { result: ToolResult; themeColor: string; textColor: string }) {
+  switch (result.type) {
+    case 'weather':
+      return (
+        <div className="bg-white/20 backdrop-blur-md p-6 rounded-2xl shadow-xl">
+          <WeatherCard 
+            location={result.location} 
+            themeColor={themeColor}
+            textColor={textColor}
+            temperature={result.temperature}
+            description={result.description}
+            humidity={result.humidity}
+            wind={result.wind}
+            feelsLike={result.feelsLike}
+          />
+        </div>
+      );
+    default:
+      return null;
+  }
 }
 
 // Example cards for the main screen
 function ExampleCards({ themeColor }: { themeColor: string }) {
   return (
     <div className="flex flex-col items-center justify-center gap-6 py-12">
-      <h2 className="text-3xl font-bold text-white mb-2">Welcome to Turtl AI</h2>
+      <h2 className="text-3xl font-bold text-white mb-2">Welcome to Turtl.ai 🐢</h2>
       <p className="text-lg text-gray-200 mb-6 max-w-xl text-center">
         Your all-in-one assistant for calculations, research, utilities, and more. Try one of the tools below or ask anything!
       </p>

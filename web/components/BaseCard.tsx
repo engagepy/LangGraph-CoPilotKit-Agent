@@ -9,6 +9,7 @@ export interface BaseCardProps {
   themeColor: string;
   children?: React.ReactNode;
   className?: string;
+  textColor?: string;
 }
 
 export const BaseCard: React.FC<BaseCardProps> = ({
@@ -19,23 +20,24 @@ export const BaseCard: React.FC<BaseCardProps> = ({
   details,
   themeColor,
   children,
-  className = ""
+  className = "",
+  textColor = "#fff",
 }) => {
   return (
     <div
-      style={{ backgroundColor: themeColor, borderRadius: '0.75rem' }}
+      style={{ backgroundColor: themeColor, borderRadius: '0.75rem', color: textColor }}
       className={`shadow-xl mt-6 mb-4 max-w-md w-full overflow-hidden ${className}`}
     >
-      <div className="bg-white/20 p-4 w-full">
+      <div className="p-4 w-full">
         <div className="flex items-center justify-between mb-3">
           <div>
-            <h3 className="text-xl font-bold text-white capitalize">{title}</h3>
-            {subtitle && <p className="text-white text-sm opacity-90">{subtitle}</p>}
+            <h3 className="text-xl font-bold capitalize" style={{ color: textColor }}>{title}</h3>
+            {subtitle && <p className="text-sm opacity-90" style={{ color: textColor, opacity: 0.9 }}>{subtitle}</p>}
           </div>
           {icon}
         </div>
-        {mainValue && <div className="text-3xl font-bold text-white mb-2">{mainValue}</div>}
-        {details && <div className="text-sm text-white opacity-90 mb-2">{details}</div>}
+        {mainValue && <div className="text-3xl font-bold mb-2" style={{ color: textColor }}>{mainValue}</div>}
+        {details && <div className="text-sm opacity-90 mb-2" style={{ color: textColor, opacity: 0.9 }}>{details}</div>}
         {children}
       </div>
     </div>

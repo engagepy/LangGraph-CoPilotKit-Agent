@@ -7,27 +7,30 @@ export interface MathCardProps {
   result: string | number;
   expression?: string;
   themeColor: string;
+  textColor?: string;
 }
 
 export const MathCard: React.FC<MathCardProps> = ({
   operation,
   result,
   expression,
-  themeColor
+  themeColor,
+  textColor = "#fff",
 }) => {
   return (
     <BaseCard
-      icon={<Calculator className="w-12 h-12 text-yellow-200" />}
+      icon={<span style={{ color: textColor }}><Calculator className="w-12 h-12" /></span>}
       title="Math Result"
       subtitle={`Operation: ${operation.replace(/_/g, ' ')}`}
-      mainValue={<span className="text-4xl">{result}</span>}
-      details={expression ? <span className="font-mono">{expression}</span> : undefined}
+      mainValue={<span className="text-4xl" style={{ color: textColor }}>{result}</span>}
+      details={expression ? <span className="font-mono" style={{ color: textColor }}>{expression}</span> : undefined}
       themeColor={themeColor}
+      textColor={textColor}
     >
-      <div className="mt-4 pt-4 border-t border-white/30">
+      <div className="mt-4 pt-4 border-t" style={{ borderColor: textColor, opacity: 0.3 }}>
         <div className="text-center">
-          <p className="text-white/80 text-xs">Calculation Complete</p>
-          <p className="text-white font-medium text-sm">✓ Result Verified</p>
+          <p className="text-xs" style={{ color: textColor, opacity: 0.8 }}>Calculation Complete</p>
+          <p className="font-medium text-sm" style={{ color: textColor }}>✓ Result Verified</p>
         </div>
       </div>
     </BaseCard>
