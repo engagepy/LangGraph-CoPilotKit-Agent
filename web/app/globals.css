@@ -80,4 +80,65 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* CopilotKit Customization */
+/* Hide debug console, help button, and development tools */
+.copilotKitDebugMenuTriggerButton,
+.copilotKitHelpItemButton,
+.copilotKitDevConsole,
+[data-testid="copilot-dev-console"],
+[class*="debug"],
+[class*="dev-console"],
+[class*="help"] {
+  display: none !important;
+}
+
+/* Hide the "Powered by CopilotKit" footer */
+[class*="poweredBy"],
+[class*="powered-by"],
+div[style*="poweredBy"],
+div:has-text("Powered by CopilotKit"),
+div[children*="Powered by CopilotKit"] {
+  display: none !important;
+}
+
+/* More specific targeting for Powered by text */
+div > div > div:last-child:has(span:contains("Powered by CopilotKit")),
+div:contains("Powered by CopilotKit") {
+  display: none !important;
+}
+
+/* Hide any div that contains "Powered by" text */
+div:has(span[children="Powered by CopilotKit"]) {
+  display: none !important;
+}
+
+/* Add custom footer to CopilotKit sidebar */
+[class*="copilotkit-sidebar"]:after,
+[class*="copilot-sidebar"]:after,
+[data-role="copilot-sidebar"]:after {
+  content: "Built by ZP";
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: #666;
+  opacity: 0.7;
+  font-weight: 500;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* Ensure the sidebar has relative positioning for absolute footer */
+[class*="copilot-sidebar"],
+[class*="copilotkit-sidebar"] {
+  position: relative;
+}
+
+/* Dark mode footer text */
+.dark [class*="copilotkit-sidebar"]:after,
+.dark [class*="copilot-sidebar"]:after {
+  color: #ccc;
 } 

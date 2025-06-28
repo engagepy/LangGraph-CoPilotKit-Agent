@@ -24,20 +24,20 @@ function SunIcon() {
 const WeatherCard: React.FC<WeatherCardProps> = ({
   location = "",
   themeColor,
-  temperature = "70°",
-  description = "Clear skies",
-  humidity = "45%",
-  wind = "5 mph",
-  feelsLike = "72°",
+  temperature,
+  description,
+  humidity,
+  wind,
+  feelsLike,
   textColor = "#fff",
 }) => {
   return (
     <BaseCard
       icon={<span style={{ color: textColor }}><SunIcon /></span>}
-      title={location}
+      title={location || "Unknown Location"}
       subtitle="Current Weather"
-      mainValue={<span className="text-4xl" style={{ color: textColor }}>{temperature}</span>}
-      details={<span style={{ color: textColor }}>{description}</span>}
+      mainValue={<span className="text-4xl" style={{ color: textColor }}>{temperature || 'N/A'}</span>}
+      details={<span style={{ color: textColor }}>{description || 'N/A'}</span>}
       themeColor={themeColor}
       textColor={textColor}
     >
@@ -45,15 +45,15 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
         <div className="grid grid-cols-3 gap-2 text-center">
           <div>
             <p className="text-xs" style={{ color: textColor }}>Humidity</p>
-            <p className="font-medium" style={{ color: textColor }}>{humidity}</p>
+            <p className="font-medium" style={{ color: textColor }}>{humidity || 'N/A'}</p>
           </div>
           <div>
             <p className="text-xs" style={{ color: textColor }}>Wind</p>
-            <p className="font-medium" style={{ color: textColor }}>{wind}</p>
+            <p className="font-medium" style={{ color: textColor }}>{wind || 'N/A'}</p>
           </div>
           <div>
             <p className="text-xs" style={{ color: textColor }}>Feels Like</p>
-            <p className="font-medium" style={{ color: textColor }}>{feelsLike}</p>
+            <p className="font-medium" style={{ color: textColor }}>{feelsLike || 'N/A'}</p>
           </div>
         </div>
       </div>

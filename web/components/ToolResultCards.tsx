@@ -60,12 +60,12 @@ export function ToolResultCard({ toolName, result, themeColor }: ToolResultCardP
     case 'get_weather':
       return (
         <WeatherCard
-          location={result.location || 'Unknown Location'}
+          location={result.city || result.location || 'Unknown Location'}
           temperature={result.temperature || result.temp}
           description={result.description || result.condition}
           humidity={result.humidity}
-          wind={result.wind_speed}
-          feelsLike={result.feels_like}
+          wind={result.wind_speed || result.wind}
+          feelsLike={result.temperature}
           themeColor={themeColor}
         />
       );

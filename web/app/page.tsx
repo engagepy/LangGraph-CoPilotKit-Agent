@@ -189,26 +189,25 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
     name: "get_weather",
     description: "Get the weather for a given location.",
     parameters: [
-      { name: "location", type: "string", required: true },
+      { name: "city", type: "string", required: true },
       { name: "temperature", type: "string", required: false },
       { name: "description", type: "string", required: false },
       { name: "humidity", type: "string", required: false },
-      { name: "wind", type: "string", required: false },
-      { name: "feels_like", type: "string", required: false },
+      { name: "wind_speed", type: "string", required: false },
     ],
-    handler: ({ location, temperature, description, humidity, wind, feels_like }) => {
-      console.log("Weather handler called with:", { location, temperature, description, humidity, wind, feels_like });
+    handler: ({ city, temperature, description, humidity, wind_speed }) => {
+      console.log("Weather handler called with:", { city, temperature, description, humidity, wind_speed });
       
       // Add to main area tool results
       const weatherResult: WeatherResult = {
         id: `weather-${Date.now()}`,
         type: 'weather',
-        location: location || "",
+        location: city || "",
         temperature,
         description,
         humidity,
-        wind,
-        feelsLike: feels_like,
+        wind: wind_speed,
+        feelsLike: temperature, // Use temperature as feels like since backend doesn't provide it
         timestamp: Date.now()
       };
       
@@ -228,14 +227,14 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
     render: ({ args }) => {
       console.log("Weather render called with args:", args);
       return <WeatherCard 
-        location={args.location || ""} 
+        location={args.city || ""} 
         themeColor={themeColor}
         textColor={textColor}
         temperature={args.temperature}
         description={args.description}
         humidity={args.humidity}
-        wind={args.wind}
-        feelsLike={args.feels_like}
+        wind={args.wind_speed}
+        feelsLike={args.temperature}
       />
     },
   });
