@@ -3,7 +3,7 @@
 import { useCoAgent, useCopilotAction } from "@copilotkit/react-core";
 import { CopilotKitCSSProperties, CopilotSidebar } from "@copilotkit/react-ui";
 import { useState } from "react";
-import { ToolResultCard } from "../components/ToolResultCards";
+import { ToolResultCard, ToolCard } from "../components/ToolResultCards";
 
 export default function CopilotKitPage() {
   const [themeColor, setThemeColor] = useState("#6366f1");
@@ -46,6 +46,70 @@ type AgentState = {
   conversation_summary: string;
 }
 
+function ExampleCards({ themeColor }: { themeColor: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center gap-6 py-12">
+      <h2 className="text-3xl font-bold text-white mb-2">Welcome to Turtl AI</h2>
+      <p className="text-lg text-gray-200 mb-6 max-w-xl text-center">
+        Your all-in-one assistant for calculations, research, utilities, and more. Try one of the tools below or ask anything!
+      </p>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <ToolCard
+          icon={<span className="text-4xl">☀️</span>}
+          title="Weather"
+          subtitle="Get current weather info for any city."
+          mainValue={<span className="text-2xl">72°</span>}
+          details={<span>Clear skies in San Francisco</span>}
+          themeColor={themeColor}
+        />
+        <ToolCard
+          icon={<span className="text-4xl">🔢</span>}
+          title="Math & Calculations"
+          subtitle="Add, multiply, or convert units."
+          mainValue={<span className="text-2xl">100 × 3 = 300</span>}
+          details={<span>Quick, accurate math</span>}
+          themeColor={themeColor}
+        />
+        <ToolCard
+          icon={<span className="text-4xl">🌐</span>}
+          title="Web Search"
+          subtitle="Find news, facts, and more."
+          mainValue={<span className="text-2xl">AI News</span>}
+          details={<span>"OpenAI launches new model"</span>}
+          themeColor={themeColor}
+        />
+        <ToolCard
+          icon={<span className="text-4xl">💱</span>}
+          title="Currency Converter"
+          subtitle="Convert between currencies."
+          mainValue={<span className="text-2xl">100 USD → 92 EUR</span>}
+          details={<span>Live rates</span>}
+          themeColor={themeColor}
+        />
+        <ToolCard
+          icon={<span className="text-4xl">📅</span>}
+          title="Public Holidays"
+          subtitle="See holidays for any country."
+          mainValue={<span className="text-2xl">India: Diwali</span>}
+          details={<span>Nov 12, 2024</span>}
+          themeColor={themeColor}
+        />
+        <ToolCard
+          icon={<span className="text-4xl">🚀</span>}
+          title="NASA APOD"
+          subtitle="Astronomy Picture of the Day."
+          mainValue={<span className="text-2xl">"Pillars of Creation"</span>}
+          details={<span>Stunning space imagery</span>}
+          themeColor={themeColor}
+        />
+      </div>
+      <div className="mt-8 text-white/80 text-center text-sm">
+        <div>Try: <span className="bg-white/20 px-2 py-1 rounded">What's the weather in Paris?</span> or <span className="bg-white/20 px-2 py-1 rounded">Convert 10 miles to kilometers</span></div>
+      </div>
+    </div>
+  );
+}
+
 function YourMainContent({ themeColor }: { themeColor: string }) {
   // 🪁 Shared State: https://docs.copilotkit.ai/coagents/shared-state
   const {state, setState} = useCoAgent<AgentState>({
@@ -68,7 +132,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
       description: "The result from the tool execution",
       required: true,
     }],
-    handler: ({ tool_name, result }) => {
+    handler: ({ tool_name, result }: { tool_name: string; result: any }) => {
       const newToolResult = {
         tool_name,
         result,
@@ -102,7 +166,7 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
       description: "Updated conversation summary",
       required: true,
     }],
-    handler: ({ summary }) => {
+    handler: ({ summary }: { summary: string }) => {
       setState({
         ...state,
         conversation_summary: summary,
@@ -115,11 +179,9 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
     if (!state.tool_results || state.tool_results.length === 0) {
       return null;
     }
-
     return (
-      <div className="space-y-4 max-h-96 overflow-y-auto">
-        <h3 className="text-lg font-semibold text-white mb-4">Recent Tool Results</h3>
-        {state.tool_results.slice(-5).reverse().map((toolResult, index) => (
+      <div className="flex flex-col items-center justify-center w-full">
+        {state.tool_results.slice(-5).reverse().map((toolResult: { tool_name: string; result: any; timestamp: string }, index: number) => (
           <ToolResultCard
             key={`${toolResult.tool_name}-${toolResult.timestamp}-${index}`}
             toolName={toolResult.tool_name}
@@ -131,89 +193,28 @@ function YourMainContent({ themeColor }: { themeColor: string }) {
     );
   };
 
+  // Out-canvas: show only if no tool results
+  if (!state.tool_results || state.tool_results.length === 0) {
+    return (
+      <div
+        style={{ backgroundColor: themeColor }}
+        className="h-screen w-screen flex justify-center items-center flex-col transition-colors duration-300 overflow-hidden"
+      >
+        <div className="bg-white/20 backdrop-blur-md p-8 rounded-2xl shadow-xl max-w-5xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+          <ExampleCards themeColor={themeColor} />
+        </div>
+      </div>
+    );
+  }
+
+  // Main tool result view (after first tool call)
   return (
     <div
       style={{ backgroundColor: themeColor }}
       className="h-screen w-screen flex justify-center items-center flex-col transition-colors duration-300 overflow-hidden"
     >
       <div className="bg-white/20 backdrop-blur-md p-8 rounded-2xl shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-        <div className="text-center mb-6">
-          <h1 className="text-4xl font-bold text-white mb-2">Turtl AI Dashboard</h1>
-          <p className="text-gray-200 italic">LangGraph Multi-Tool Agent with CopilotKit Integration</p>
-          <div className="mt-4 text-sm text-gray-200 opacity-80">
-            🚀 LangGraph API: <code className="bg-white/20 px-2 py-1 rounded">http://127.0.0.1:2024</code>
-          </div>
-        </div>
-        
-        <hr className="border-white/20 my-6" />
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left Column: Conversation Summary */}
-          <div className="space-y-4">
-            <div className="bg-white/15 p-6 rounded-xl text-white">
-              <h2 className="text-xl font-semibold mb-3 flex items-center">
-                <span className="mr-2">💬</span>
-                Conversation Status
-              </h2>
-              <p className="text-sm opacity-90 leading-relaxed">
-                {state.conversation_summary}
-              </p>
-              <button 
-                onClick={() => setState({...state, tool_results: []})}
-                className="mt-4 bg-red-500/80 hover:bg-red-600/80 text-white px-4 py-2 rounded-lg text-sm transition-colors"
-              >
-                Clear Results
-              </button>
-            </div>
-
-            {/* Available Tools Info */}
-            <div className="bg-white/15 p-6 rounded-xl text-white">
-              <h2 className="text-xl font-semibold mb-3 flex items-center">
-                <span className="mr-2">🛠️</span>
-                Available Tools
-              </h2>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div>• Math operations</div>
-                <div>• Weather info</div>
-                <div>• Web search</div>
-                <div>• Crypto prices</div>
-                <div>• GitHub trends</div>
-                <div>• Unit conversion</div>
-                <div>• QR codes</div>
-                <div>• URL shortening</div>
-                <div>• NASA APOD</div>
-                <div>• Wikipedia</div>
-                <div>• Public holidays</div>
-                <div>• And more!</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column: Tool Results */}
-          <div className="space-y-4">
-            {renderToolResults()}
-            {(!state.tool_results || state.tool_results.length === 0) && (
-              <div className="bg-white/15 p-8 rounded-xl text-white text-center">
-                <div className="text-6xl mb-4">🤖</div>
-                <h3 className="text-lg font-semibold mb-2">No Tool Results Yet</h3>
-                <p className="text-sm opacity-80">
-                  Ask me to use any tool and the results will appear here in beautiful cards!
-                </p>
-                <div className="mt-4 text-xs opacity-60">
-                  Try: "What's the weather?" or "Convert 10 miles to kilometers"
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Footer with connection status */}
-        <div className="mt-6 pt-4 border-t border-white/20 text-center text-xs text-white/60">
-          <span className="inline-flex items-center">
-            <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-            Connected to LangGraph Agent at localhost:2024
-          </span>
-        </div>
+        {renderToolResults()}
       </div>
     </div>
   );

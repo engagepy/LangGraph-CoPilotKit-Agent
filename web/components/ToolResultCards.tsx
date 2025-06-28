@@ -1,11 +1,46 @@
 "use client";
 
+import React from 'react';
 import { Calculator, Cloud, DollarSign, Calendar, Github, Globe, BookOpen, Clock, QrCode, Link, Search, Rocket, Map, TrendingUp } from 'lucide-react';
 
 interface ToolResultCardProps {
   toolName: string;
   result: any;
   themeColor: string;
+}
+
+// Generic, professional card for tool results or examples
+export interface ToolCardProps {
+  icon?: React.ReactNode;
+  title: string;
+  subtitle?: string;
+  mainValue?: React.ReactNode;
+  details?: React.ReactNode;
+  themeColor: string;
+  children?: React.ReactNode;
+  className?: string;
+}
+
+export function ToolCard({ icon, title, subtitle, mainValue, details, themeColor, children, className }: ToolCardProps) {
+  return (
+    <div
+      style={{ backgroundColor: themeColor, borderRadius: '12px', boxShadow: '0 8px 32px rgba(0,0,0,0.1)' }}
+      className={`mt-6 mb-4 max-w-md w-full ${className || ''}`}
+    >
+      <div className="bg-white/20 p-4 w-full">
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <h3 className="text-xl font-bold text-white capitalize">{title}</h3>
+            {subtitle && <p className="text-white text-sm">{subtitle}</p>}
+          </div>
+          {icon}
+        </div>
+        {mainValue && <div className="text-3xl font-bold text-white mb-2">{mainValue}</div>}
+        {details && <div className="text-sm text-white opacity-90 mb-2">{details}</div>}
+        {children}
+      </div>
+    </div>
+  );
 }
 
 export function ToolResultCard({ toolName, result, themeColor }: ToolResultCardProps) {
