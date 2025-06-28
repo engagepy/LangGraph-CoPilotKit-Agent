@@ -1,4 +1,4 @@
-# LangGraph Multi-Agent System
+# LangGraph Multi-Tool Agent System
 
 A comprehensive multi-agent system built with LangGraph that provides a wide range of tools and capabilities through a modular, well-organized architecture.
 
