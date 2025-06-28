@@ -21,7 +21,7 @@ export const CryptoCard: React.FC<CryptoCardProps> = ({
   return (
     <BaseCard
       icon={<DollarSign className="w-12 h-12 text-green-200" />}
-      title={symbol.toUpperCase()}
+      title={symbol?.toUpperCase() || 'UNKNOWN'}
       subtitle="Cryptocurrency"
       mainValue={<span className="text-4xl">${price}</span>}
       themeColor={themeColor}

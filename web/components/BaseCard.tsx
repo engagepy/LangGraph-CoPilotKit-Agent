@@ -23,10 +23,10 @@ export const BaseCard: React.FC<BaseCardProps> = ({
 }) => {
   return (
     <div
-      style={{ backgroundColor: themeColor }}
-      className={`rounded-xl shadow-xl mt-6 mb-4 max-w-md w-full ${className}`}
+      style={{ backgroundColor: themeColor, borderRadius: '0.75rem' }}
+      className={`shadow-xl mt-6 mb-4 max-w-md w-full overflow-hidden ${className}`}
     >
-      <div className="bg-white/20 p-4 w-full rounded-xl">
+      <div className="bg-white/20 p-4 w-full">
         <div className="flex items-center justify-between mb-3">
           <div>
             <h3 className="text-xl font-bold text-white capitalize">{title}</h3>
