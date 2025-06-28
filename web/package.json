@@ -1,0 +1,34 @@
+{
+  "name": "langgraph-copilotkit-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@copilotkit/runtime": "latest",
+    "@copilotkit/react-core": "latest",
+    "@copilotkit/react-ui": "latest",
+    "autoprefixer": "^10.4.21",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.454.0",
+    "next": "14.2.16",
+    "react": "^18",
+    "react-dom": "^18",
+    "tailwind-merge": "^2.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.16",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.14",
+    "tw-animate-css": "^1.0.1",
+    "typescript": "^5"
+  }
+}
