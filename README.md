@@ -3,13 +3,6 @@
 A comprehensive multi-agent system built with LangGraph that provides a wide range of tools and capabilities through a modular, well-organized architecture.
 
 
-## 🎥 Demo Video
-
-[![Demo Video](https://img.shields.io/badge/Watch-Demo%20Video-blue?style=for-the-badge&logo=play&logoColor=white)](./demo-video.mov)
-
-> Click the badge above to watch the demo video showcasing the multi-agent system in action.
-
-
 ## 🚀 Features
 
 This project implements a sophisticated agent system with the following capabilities:
