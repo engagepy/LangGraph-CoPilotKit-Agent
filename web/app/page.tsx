@@ -130,7 +130,7 @@ export default function CopilotKitPage() {
           boxShadow: "0 2px 12px 0 rgba(0,0,0,0.08)",
           fontSize: "1rem",
           letterSpacing: "0.01em",
-          minWidth: "142.5px",
+          minWidth: "142.3px",
         }}
       >
         <svg
