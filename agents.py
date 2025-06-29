@@ -61,6 +61,18 @@ sys_msg = SystemMessage(content="""
                                 Always use web search tool for wikipedia enquiry.
                                 Always use web search tool for any external information you need, esepcially when another tool is not available.
                                 Use web search when a tool call fails as backup to answer the user's query.
+                        
+                                Note these donts :
+
+                                - Do not call QR code tool along with any other tool.
+                                - Do not call URL shortener tool along with any other tool.
+                                - Do not call Wikipedia tool along with any other tool.
+                                - Do not call NASA APOD tool along with any other tool.
+                                - Do not call Public holidays tool along with any other tool.
+                                - Do not call GitHub trends tool along with any other tool.
+                                - Do not call Timezone tool along with any other tool.
+                        
+                                Always one at a time. 
                                 """)
 
 # Node

@@ -8,7 +8,7 @@ import { SearchCard } from "../components/SearchCard";
 import { MathCard } from "../components/MathCard";
 import { CryptoCard } from "../components/CryptoCard";
 import { NASACard } from "../components/NASACard";
-import { QRCodeCard } from "../components/QRCodeCard";
+import QRCodeCard from "../components/QRCodeCard";
 import { URLCard } from "../components/URLCard";
 import { TimezoneCard } from "../components/TimezoneCard";
 import { WikipediaCard } from "../components/WikipediaCard";
@@ -540,10 +540,10 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
       { name: "qr_code_url", type: "string", required: true },
       { name: "content", type: "string", required: false },
     ],
-    render: ({ args }) => {
+    render: ({ result }) => {
       return <QRCodeCard
-        qrCodeUrl={args.qr_code_url as string}
-        data={args.content as string}
+        qrCodeUrl={result?.qr_code_url as string}
+        data={result?.content as string}
         themeColor={themeColor}
         textColor={textColor}
       />
