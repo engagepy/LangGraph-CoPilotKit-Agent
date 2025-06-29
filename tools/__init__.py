@@ -1,5 +1,5 @@
 # Import all tools from their respective modules
-from .math_tools import add, multiply, divide
+from .math_tools import add, multiply, divide, subtract, power, modulo, floor_divide
 from .weather_tools import get_weather
 from .finance_tools import get_crypto_price
 from .network_tools import get_ip_info
@@ -21,6 +21,10 @@ __all__ = [
     'add',
     'multiply', 
     'divide',
+    'subtract',
+    'power',
+    'modulo',
+    'floor_divide',
     'get_weather',
     'get_crypto_price',
     'get_ip_info',

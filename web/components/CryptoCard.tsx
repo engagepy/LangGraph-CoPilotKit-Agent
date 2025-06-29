@@ -45,8 +45,10 @@ export const CryptoCard: React.FC<CryptoCardProps> = ({
       themeColor={themeColor}
       textColor={textColor}
     >
-      <div className="mt-4 pt-4 border-t flex items-center justify-center gap-3"
-        style={{ borderColor: textColor, opacity: 0.3 }}>
+      <div
+        className="mt-4 pt-4 border-t flex items-center justify-center gap-3"
+        style={{ borderColor: textColor, opacity: 0.3, borderTopWidth: 1 }}
+      >
         {change24h !== undefined && change24h !== null ? (
           <>
             <span style={{ color: isPositive ? "#7cff97" : "#ff7676" }}>

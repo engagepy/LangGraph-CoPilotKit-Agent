@@ -12,6 +12,7 @@ export interface SearchCardProps {
     content?: string;
   }>;
   themeColor: string;
+  textColor?: string;
 }
 
 export const SearchCard: React.FC<SearchCardProps> = ({
@@ -19,7 +20,8 @@ export const SearchCard: React.FC<SearchCardProps> = ({
   query,
   answer,
   results,
-  themeColor
+  themeColor,
+  textColor = "#fff"
 }) => {
   const getIcon = () => {
     switch (type) {
@@ -42,11 +44,12 @@ export const SearchCard: React.FC<SearchCardProps> = ({
       icon={getIcon()}
       title={getTypeLabel()}
       subtitle={query}
-      mainValue={answer ? <span className="text-base leading-relaxed">{answer.slice(0, 120)}...</span> : undefined}
+      mainValue={answer ? <span className="text-base leading-relaxed" style={{ color: textColor }}>{answer.slice(0, 120)}...</span> : undefined}
       themeColor={themeColor}
+      textColor={textColor}
     >
       {results && results.length > 0 ? (
-        <div className="mt-4 pt-4 border-t border-white/30 space-y-3 max-h-72 overflow-y-auto custom-scrollbar">
+        <div className="mt-4 pt-4 border-t space-y-3 max-h-72 overflow-y-auto custom-scrollbar" style={{ borderColor: textColor, opacity: 0.3 }}>
           {results.map((result, index) => (
             <div key={index} className="bg-white/10 p-3 rounded-lg">
               <a 
@@ -54,11 +57,12 @@ export const SearchCard: React.FC<SearchCardProps> = ({
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="text-blue-200 hover:underline font-medium text-sm block"
+                style={{ color: textColor }}
               >
                 {result.title}
               </a>
               {result.content && (
-                <p className="text-xs text-white/80 mt-1 leading-relaxed">
+                <p className="text-xs mt-1 leading-relaxed" style={{ color: textColor, opacity: 0.8 }}>
                   {result.content.slice(0, 100)}...
                 </p>
               )}
@@ -66,14 +70,14 @@ export const SearchCard: React.FC<SearchCardProps> = ({
           ))}
         </div>
       ) : (
-        <div className="mt-4 pt-4 border-t border-white/30 flex items-center justify-center min-h-[4rem]">
+        <div className="mt-4 pt-4 border-t flex items-center justify-center min-h-[4rem]" style={{ borderColor: textColor, opacity: 0.3 }}>
           <div className="flex items-center space-x-2">
             <div className="flex space-x-1">
-              <div className="w-2 h-2 bg-white/70 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-              <div className="w-2 h-2 bg-white/70 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-              <div className="w-2 h-2 bg-white/70 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+              <div className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: textColor, animationDelay: '0ms' }}></div>
+              <div className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: textColor, animationDelay: '150ms' }}></div>
+              <div className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: textColor, animationDelay: '300ms' }}></div>
             </div>
-            <span className="text-white/70 text-base">Loading...</span>
+            <span className="text-base" style={{ color: textColor, opacity: 0.7 }}>Loading...</span>
           </div>
         </div>
       )}

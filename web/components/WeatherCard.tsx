@@ -7,9 +7,10 @@ export type WeatherCardProps = {
   temperature?: string;
   description?: string;
   humidity?: string;
-  wind?: string;
+  wind_speed?: string;
   feelsLike?: string;
   textColor?: string;
+  isDay?: boolean;
 };
 
 function SunIcon() {
@@ -21,19 +22,31 @@ function SunIcon() {
   );
 }
 
+function MoonIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-14 h-14 text-blue-200">
+      <path d="M21.64 13a1 1 0 0 0-1.05-.14 8.05 8.05 0 0 1-3.37.73 8.15 8.15 0 0 1-8.22-8.22 8.05 8.05 0 0 1 .73-3.37 1 1 0 0 0-.14-1.05 1 1 0 0 0-1.12-.22 10 10 0 1 0 12.22 12.22 1 1 0 0 0-.22-1.12zM12 19.5a7.5 7.5 0 0 1-5.19-12.81 10.13 10.13 0 0 0 7.5 7.5 7.5 7.5 0 0 1-2.31 5.31z"/>
+      <circle cx="17" cy="7" r="1.5" fill="currentColor" className="text-blue-100"/>
+      <circle cx="19" cy="4" r="1" fill="currentColor" className="text-blue-100"/>
+      <circle cx="21" cy="6" r="0.5" fill="currentColor" className="text-blue-100"/>
+    </svg>
+  );
+}
+
 const WeatherCard: React.FC<WeatherCardProps> = ({
   location = "",
   themeColor,
   temperature,
   description,
   humidity,
-  wind,
+  wind_speed,
   feelsLike,
   textColor = "#fff",
+  isDay = true,
 }) => {
   return (
     <BaseCard
-      icon={<span style={{ color: textColor }}><SunIcon /></span>}
+      icon={<span style={{ color: textColor }}>{isDay ? <SunIcon /> : <MoonIcon />}</span>}
       title={location || "Unknown Location"}
       subtitle="Current Weather"
       mainValue={<span className="text-4xl" style={{ color: textColor }}>{temperature || 'N/A'}</span>}
@@ -49,7 +62,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
           </div>
           <div>
             <p className="text-xs" style={{ color: textColor }}>Wind</p>
-            <p className="font-medium" style={{ color: textColor }}>{wind || 'N/A'}</p>
+            <p className="font-medium" style={{ color: textColor }}>{wind_speed || 'N/A'}</p>
           </div>
           <div>
             <p className="text-xs" style={{ color: textColor }}>Feels Like</p>

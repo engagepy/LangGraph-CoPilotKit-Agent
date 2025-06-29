@@ -7,7 +7,7 @@ from langgraph.prebuilt import tools_condition, ToolNode
 
 # Import all tools from the tools package
 from tools import (
-    add, multiply, divide,
+    add, multiply, divide, subtract, power, modulo, floor_divide,
     get_weather,
     get_crypto_price, get_ip_info, get_word_definition,
     web_search, search_news, search_academic,
@@ -23,7 +23,7 @@ load_dotenv()
 
 # List of available tools
 tools = [
-    add, multiply, divide,
+    add, multiply, divide, subtract, power, modulo, floor_divide,
     get_weather,
     get_crypto_price, get_ip_info, get_word_definition,
     web_search, search_news, search_academic,
@@ -52,7 +52,13 @@ sys_msg = SystemMessage(content="""
                                 After your introduction, answer the user's query. 
                                 Remove markdown, emdash, and ** from all responses, including tool outputs. 
                                 Always use clear bullet points and formatting for readability.
-                        
+                                Always use add in math tool for addition operations. 
+                                Always use multiply in math tool for multiplication operations.
+                                Always use divide in math tool for division operations.
+                                Always use subtract in math tool for subtraction operations.
+                                Always use power in math tool for power operations.
+                                Always use modulo in math tool for modulo operations.
+                                Always use floor_divide in math tool for floor division operations.
                                 Always render citation and link from web search results.
                         
                                 Always use web search tool for stock price enquiry.

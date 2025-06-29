@@ -2,14 +2,14 @@
 
 import React from 'react';
 import { BaseCard } from './BaseCard';
-import { MathCard } from './MathCard';
+import MathCard from './MathCard';
 import { CryptoCard } from './CryptoCard';
 import { SearchCard } from './SearchCard';
 import { GitHubCard } from './GitHubCard';
 import { NASACard } from './NASACard';
 import { WikipediaCard } from './WikipediaCard';
 import { TimezoneCard } from './TimezoneCard';
-import { QRCodeCard } from './QRCodeCard';
+import QRCodeCard from './QRCodeCard';
 import { URLCard } from './URLCard';
 import { UnitConversionCard } from './UnitConversionCard';
 import { HolidayCard } from './HolidayCard';
@@ -159,6 +159,39 @@ export function ToolResultCard({ toolName, result, themeColor }: ToolResultCardP
         />
       );
 
+
+      // Math Copilot action (improved)
+    case 'math_result':
+      return (
+        <MathCard
+          operation={result.operation}
+          result={result.result}
+          expression={result.expression}
+          a={result.a}
+          b={result.b}
+          themeColor={themeColor}
+          textColor={result.textColor || "#fff"}
+        />
+      );
+
+      case 'add':
+      case 'multiply':
+      case 'divide':
+      case 'subtract':
+      case 'power':
+      case 'modulo':
+      case 'floor_divide':
+        return (
+          <MathCard
+            operation={toolName}
+            result={result.result ?? result}
+            expression={result.expression}
+            a={result.a}
+            b={result.b}
+            themeColor={themeColor}
+            textColor={result.textColor || "#fff"}
+          />
+        );
     // QR Code
     case 'generate_qr_code':
       return (

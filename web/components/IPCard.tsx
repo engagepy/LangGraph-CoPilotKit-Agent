@@ -7,31 +7,43 @@ export type IPCardProps = {
   location?: string;
   isp?: string;
   themeColor: string;
+  textColor?: string; // <- allow this for theming
 };
 
-const IPCard: React.FC<IPCardProps> = ({ ip, location, isp, themeColor }) => {
+const IPCard: React.FC<IPCardProps> = ({
+  ip,
+  location,
+  isp,
+  themeColor,
+  textColor = "#fff", // default white if not specified
+}) => {
   return (
     <BaseCard
-      icon={<Globe className="w-12 h-12 text-green-200" />}
+      icon={<Globe className="w-12 h-12" style={{ color: textColor }} />}
       title="IP Address"
       subtitle="Network Information"
-      mainValue={<span className="text-xl font-mono">{ip}</span>}
+      mainValue={
+        <span className="text-xl font-mono" style={{ color: textColor }}>
+          {ip}
+        </span>
+      }
       themeColor={themeColor}
+      textColor={textColor}
     >
-      <div className="mt-4 pt-4 border-t border-white/30">
+      <div className="mt-4 pt-4 border-t" style={{ borderColor: textColor, opacity: 0.3 }}>
         <div className="grid grid-cols-2 gap-4 text-center">
           {location && (
             <div>
-              <MapPin className="w-4 h-4 text-white/80 mx-auto mb-1" />
-              <p className="text-white/80 text-xs">Location</p>
-              <p className="text-white font-medium text-sm">{location}</p>
+              <MapPin className="w-4 h-4 mx-auto mb-1" style={{ color: textColor }} />
+              <p className="text-xs" style={{ color: textColor, opacity: 0.8 }}>Location</p>
+              <p className="font-medium text-sm" style={{ color: textColor }}>{location}</p>
             </div>
           )}
           {isp && (
             <div>
-              <Wifi className="w-4 h-4 text-white/80 mx-auto mb-1" />
-              <p className="text-white/80 text-xs">ISP</p>
-              <p className="text-white font-medium text-sm">{isp}</p>
+              <Wifi className="w-4 h-4 mx-auto mb-1" style={{ color: textColor }} />
+              <p className="text-xs" style={{ color: textColor, opacity: 0.8 }}>ISP</p>
+              <p className="font-medium text-sm" style={{ color: textColor }}>{isp}</p>
             </div>
           )}
         </div>
@@ -40,4 +52,4 @@ const IPCard: React.FC<IPCardProps> = ({ ip, location, isp, themeColor }) => {
   );
 };
 
-export default IPCard; 
+export default IPCard;

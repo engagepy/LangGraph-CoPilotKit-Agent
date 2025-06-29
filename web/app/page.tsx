@@ -5,7 +5,7 @@ import { useCoAgent, useCopilotAction } from "@copilotkit/react-core";
 import { CopilotKitCSSProperties, CopilotSidebar } from "@copilotkit/react-ui";
 import { ToolResultCard, ToolCard } from "../components/ToolResultCards";
 import { SearchCard } from "../components/SearchCard";
-import { MathCard } from "../components/MathCard";
+import MathCard from "../components/MathCard";
 import { CryptoCard } from "../components/CryptoCard";
 import { NASACard } from "../components/NASACard";
 import QRCodeCard from "../components/QRCodeCard";
@@ -180,6 +180,7 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
       { name: 'description', type: 'string', required: false },
       { name: 'humidity',    type: 'string', required: false },
       { name: 'wind',        type: 'string', required: false },
+      { name: 'is_day',      type: 'boolean', required: false },
     ],
     handler: ({ city, temperature, description, humidity, wind }) => {
       const weatherResult: WeatherResult = {
@@ -239,14 +240,15 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
       }
   
       // When there's real data, render as usual
-      const data = result
+            const data = result
         ? {
             location:  result.city || result.location,
             temperature: result.temperature,
             description: result.description,
             humidity:    result.humidity,
-            wind:        result.wind,
+            wind:        result.wind_speed,
             feelsLike:   result.feelsLike ?? result.temperature,
+            isDay:       result.is_day,
           }
         : {
             location:    args.city,
@@ -255,8 +257,9 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
             humidity:    args.humidity,
             wind:        args.wind,
             feelsLike:   args.temperature,
+            isDay:       true, // default to day if no data
           };
-  
+
       return (
         <WeatherCard
           location={data.location}
@@ -265,8 +268,9 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
           temperature={data.temperature}
           description={data.description}
           humidity={data.humidity}
-          wind={data.wind}
+          wind_speed={data.wind}
           feelsLike={data.feelsLike}
+          isDay={data.isDay}
         />
       );
     },
@@ -302,15 +306,69 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
       { name: "operation", type: "string", required: true },
       { name: "result", type: "string", required: true },
       { name: "expression", type: "string", required: false },
+      { name: "a", type: "number", required: false },
+      { name: "b", type: "number", required: false },
+      { name: "error", type: "string", required: false },
     ],
-    render: ({ args }) => {
-      return <MathCard
-        operation={args.operation as string}
-        result={args.result as string}
-        expression={args.expression as string}
-        themeColor={themeColor}
-        textColor={textColor}
-      />
+    render: ({ result, args }) => {
+      // Show loading state if neither result nor essential values are present
+      const isFetching = !result || (Object.keys(result).length === 0);
+      const hasNoData = (!args.result && !result?.result);
+  
+      if (isFetching && hasNoData) {
+        return (
+          <div
+            className="flex items-center justify-center p-8"
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              borderRadius: "1.5em",
+              minHeight: "8em",
+            }}
+          >
+            <span className="text-white/70 text-base">
+              Calculating <b>{args.operation || "math"}</b>...
+            </span>
+          </div>
+        );
+      }
+  
+      // Unpack the most up-to-date values (prefer result over args)
+      const operation = result?.operation || args.operation;
+      const mathResult = result?.result ?? args.result;
+      const expression = result?.expression ?? args.expression;
+      const a = result?.a ?? args.a;
+      const b = result?.b ?? args.b;
+      const error = result?.error ?? args.error;
+  
+      // Render error card if error exists
+      if (error) {
+        return (
+          <div
+            className="flex flex-col items-center justify-center p-8"
+            style={{
+              background: "rgba(255,0,0,0.04)",
+              borderRadius: "1.5em",
+              minHeight: "8em",
+            }}
+          >
+            <span className="text-red-400 text-base font-bold">Math Error</span>
+            <span className="text-red-300 text-sm mt-2">{error}</span>
+          </div>
+        );
+      }
+  
+      // Otherwise, render the full MathCard as intended
+      return (
+        <MathCard
+          operation={operation}
+          result={mathResult}
+          expression={expression}
+          a={a}
+          b={b}
+          themeColor={themeColor}
+          textColor={textColor}
+        />
+      );
     },
   });
 
@@ -435,16 +493,20 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
   // Math Operations UI Components
   useCopilotAction({
     name: "add",
-    description: "Display addition results.",
+    description: "Use for add operatons only. Display addition results.",
     parameters: [
       { name: "result", type: "string", required: true },
       { name: "expression", type: "string", required: false },
+      { name: "a", type: "number", required: false },
+      { name: "b", type: "number", required: false },
     ],
-    render: ({ args }) => {
+    render: ({ result, args }) => {
       return <MathCard
         operation="add"
-        result={args.result as string}
-        expression={args.expression as string}
+        result={result?.result as string}
+        expression={result?.expression as string}
+        a={result?.a}
+        b={result?.b}
         themeColor={themeColor}
         textColor={textColor}
       />
@@ -453,16 +515,20 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
 
   useCopilotAction({
     name: "multiply",
-    description: "Display multiplication results.",
+    description: "Use for multiply operatons only. Display multiplication results.",
     parameters: [
       { name: "result", type: "string", required: true },
       { name: "expression", type: "string", required: false },
+      { name: "a", type: "number", required: false },
+      { name: "b", type: "number", required: false },
     ],
-    render: ({ args }) => {
+    render: ({ result, args }) => {
       return <MathCard
         operation="multiply"
-        result={args.result as string}
-        expression={args.expression as string}
+        result={result?.result as string}
+        expression={result?.expression as string}
+        a={result?.a}
+        b={result?.b}
         themeColor={themeColor}
         textColor={textColor}
       />
@@ -471,16 +537,86 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
 
   useCopilotAction({
     name: "divide",
-    description: "Display division results.",
+    description: "Use for divide operatons only. Display division results.",
     parameters: [
       { name: "result", type: "string", required: true },
       { name: "expression", type: "string", required: false },
+      { name: "a", type: "number", required: false },
+      { name: "b", type: "number", required: false },
     ],
-    render: ({ args }) => {
+    render: ({ result, args }) => {
       return <MathCard
         operation="divide"
-        result={args.result as string}
-        expression={args.expression as string}
+        result={result?.result as string}
+        expression={result?.expression as string}
+        a={result?.a}
+        b={result?.b}
+        themeColor={themeColor}
+        textColor={textColor}
+      />
+    },
+  });
+
+  useCopilotAction({
+    name: "subtract",
+    description: "Use for subtract operatons only. Display subtraction results.",
+    parameters: [
+      { name: "result", type: "string", required: true },
+      { name: "expression", type: "string", required: false },
+      { name: "a", type: "number", required: false },
+      { name: "b", type: "number", required: false },
+    ],
+    render: ({ result, args }) => {
+      return <MathCard
+        operation="subtract"
+        result={result?.result as string}
+        expression={result?.expression as string}
+        a={result?.a}
+        b={result?.b}
+        themeColor={themeColor}
+        textColor={textColor}
+      />
+    },
+  });
+
+  useCopilotAction({
+    name: "power",
+    description: "Use for power operatons only. Display power results.",
+    parameters: [
+      { name: "result", type: "string", required: true },
+      { name: "expression", type: "string", required: false },
+      { name: "a", type: "number", required: false },
+      { name: "b", type: "number", required: false },
+    ],
+    render: ({ result, args }) => {
+      return <MathCard
+        operation="power"
+        result={result?.result as string}      
+        expression={result?.expression as string}
+        a={result?.a}
+        b={result?.b}
+        themeColor={themeColor}
+        textColor={textColor}
+      />
+    },
+  });
+
+  useCopilotAction({
+    name: "modulo",
+    description: "Use for modulo operatons only. Display modulo results.",
+    parameters: [
+      { name: "result", type: "string", required: true },
+      { name: "expression", type: "string", required: false },
+      { name: "a", type: "number", required: false },
+      { name: "b", type: "number", required: false },
+    ],
+    render: ({ result, args }) => {
+      return <MathCard
+        operation="modulo"
+        result={result?.result as string}
+        expression={result?.expression as string}
+        a={result?.a}
+        b={result?.b}
         themeColor={themeColor}
         textColor={textColor}
       />
@@ -488,6 +624,7 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
   });
 
   // Wikipedia Summary UI Component
+        // Wikipedia Summary UI Component
   useCopilotAction({
     name: "get_wikipedia_summary",
     description: "Display Wikipedia summary.",
@@ -784,7 +921,7 @@ function ToolResultRenderer({ result, themeColor, textColor }: { result: ToolRes
             temperature={result.temperature}
             description={result.description}
             humidity={result.humidity}
-            wind={result.wind}
+            wind_speed={result.wind}
             feelsLike={result.feelsLike}
           />
         </div>
@@ -865,6 +1002,18 @@ function SunIcon() {
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-14 h-14 text-yellow-200">
       <circle cx="12" cy="12" r="5" />
       <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" strokeWidth="2" stroke="currentColor" />
+    </svg>
+  );
+}
+
+// Simple moon icon for the weather card (night time)
+function MoonIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-14 h-14 text-blue-200">
+      <path d="M21.64 13a1 1 0 0 0-1.05-.14 8.05 8.05 0 0 1-3.37.73 8.15 8.15 0 0 1-8.22-8.22 8.05 8.05 0 0 1 .73-3.37 1 1 0 0 0-.14-1.05 1 1 0 0 0-1.12-.22 10 10 0 1 0 12.22 12.22 1 1 0 0 0-.22-1.12zM12 19.5a7.5 7.5 0 0 1-5.19-12.81 10.13 10.13 0 0 0 7.5 7.5 7.5 7.5 0 0 1-2.31 5.31z"/>
+      <circle cx="17" cy="7" r="1.5" fill="currentColor" className="text-blue-100"/>
+      <circle cx="19" cy="4" r="1" fill="currentColor" className="text-blue-100"/>
+      <circle cx="21" cy="6" r="0.5" fill="currentColor" className="text-blue-100"/>
     </svg>
   );
 }
