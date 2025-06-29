@@ -2,6 +2,7 @@
 
 A comprehensive multi-agent system built with LangGraph that provides a wide range of tools and capabilities through a modular, well-organized architecture.
 
+![alt text](demo-landing.png)
 
 ## 🚀 Features
 
@@ -148,11 +149,28 @@ lang-agent-multi-1/
 │   ├── timezone_converter.py       # Timezone info
 │   ├── unit_converter.py           # General unit converter
 │   ├── convert_land_unit.py        # Indian land unit converter
-├── agents.py                      # Main agent orchestration
-├── langgraph.json                 # LangGraph configuration
-├── requirements.txt               # Python dependencies
-└── README.md                      # This file
+├── web/                            # Next.js frontend application
+│   ├── src/                        # Source code
+│   │   ├── app/                    # Next.js App Router
+│   │   │   ├── api/                # API routes
+│   │   │   ├── globals.css         # Global styles
+│   │   │   ├── layout.tsx          # Root layout with CopilotKit provider
+│   │   │   └── page.tsx            # Main application page
+│   │   └── components/             # React components
+│   │       ├── MainContent.tsx     # Dashboard and tool examples
+│   │       ├── ToolActions.tsx     # CopilotKit tool action definitions
+│   │       └── ToolResultCard.tsx  # Tool execution result display
+│   ├── package.json                # Node.js dependencies
+│   ├── tailwind.config.js          # Tailwind CSS configuration
+│   ├── next.config.js              # Next.js configuration
+│   └── .env.local                  # Environment variables
+├── agents.py                       # Main agent orchestration
+├── langgraph.json                  # LangGraph configuration
+├── requirements.txt                # Python dependencies
+└── README.md                       # This file
 ```
+
+# Backend Docs: 
 
 ## 🛠️ Installation
 
@@ -453,45 +471,7 @@ export LANGCHAIN_API_KEY=your_langchain_api_key_here
 langgraph dev
 ```
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/new-tool`
-3. Add your tool to the appropriate module in `tools/`
-4. Update `tools/__init__.py` to export your tool
-5. Add your tool to the tools list in `agents.py`
-6. Test your changes
-7. Submit a pull request
-
-### Adding New Tools
-
-1. Create a new file in `tools/` (e.g., `tools/calendar_tools.py`)
-2. Implement your tool function with proper type hints and docstrings
-3. Add the import to `tools/__init__.py`
-4. Add the tool to the tools list in `agents.py`
-5. Update this README with documentation
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-- **LangGraph**: For the powerful graph-based agent framework
-- **LangChain**: For the LLM integration capabilities
-- **LangSmith**: For tracing, observability, and API key management
-- **OpenAI**: For the GPT models
-- **Tavily**: For the web search API
-- **OpenWeatherMap**: For weather data API
-- **NewsAPI**: For news articles
-- **Various Free APIs**: For quotes, jokes, crypto prices, and dictionary data
-
-## 📞 Support
-
-For issues and questions:
-1. Check the troubleshooting section above
-2. Review the LangGraph documentation
-3. Open an issue on the repository
+# Frontend Docs:
 
 ## 🧑‍💻 CopilotKit Integration & Frontend Spin-Up
 
@@ -591,5 +571,48 @@ NEXT_PUBLIC_COPILOTKIT_AGENT_NAME=agent
 2. Edit `.env.local` and fill in any required values.
 
 ---
+
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/new-tool`
+3. Add your tool to the appropriate module in `tools/`
+4. Update `tools/__init__.py` to export your tool
+5. Add your tool to the tools list in `agents.py`
+6. Test your changes
+7. Submit a pull request
+
+### Adding New Tools
+
+1. Create a new file in `tools/` (e.g., `tools/calendar_tools.py`)
+2. Implement your tool function with proper type hints and docstrings
+3. Add the import to `tools/__init__.py`
+4. Add the tool to the tools list in `agents.py`
+5. Update this README with documentation
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🙏 Acknowledgments
+
+- **LangGraph**: For the powerful graph-based agent framework
+- **LangChain**: For the LLM integration capabilities
+- **LangSmith**: For tracing, observability, and API key management
+- **OpenAI**: For the GPT models
+- **Tavily**: For the web search API
+- **OpenWeatherMap**: For weather data API
+- **NewsAPI**: For news articles
+- **Various Free APIs**: For quotes, jokes, crypto prices, and dictionary data
+
+## 📞 Support
+
+For issues and questions:
+1. Check the troubleshooting section above
+2. Review the LangGraph documentation
+3. Open an issue on the repository
+
+
 
 **Happy coding! 🚀**
