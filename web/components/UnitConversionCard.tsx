@@ -46,7 +46,7 @@ export const UnitConversionCard: React.FC<UnitConversionCardProps> = ({
         </div>
         
         <div className="text-center">
-          <p className="text-white/80 text-xs">Conversion Formula</p>
+          <p className="text-white/80 text-xs">Result</p>
           <p className="text-white/90 text-sm font-mono bg-white/10 p-2 rounded mt-1">
             {fromValue} {fromUnit} = {toValue} {toUnit}
           </p>

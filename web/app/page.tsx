@@ -212,18 +212,43 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
       return weatherResult;
     },
     render: ({ result, args }) => {
-      // **guard**: don’t try to read result before it’s set
+      // Check for early/empty render, show a fetching state instead of WeatherCard
+      const isFetching = !result ;
+      const hasNoData =
+        !args.temperature && !args.description && !args.humidity && !args.wind;
+  
+      if (
+        isFetching &&
+        hasNoData
+      ) {
+        // Minimal fetching state, could be animated or more styled if you wish
+        return (
+          <div
+            className="flex items-center justify-center p-8"
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              borderRadius: "1.5em",
+              minHeight: "8em",
+            }}
+          >
+            <span className="text-white/70 text-base">
+              Fetching weather for <b>{args.city || "..."}</b>...
+            </span>
+          </div>
+        );
+      }
+  
+      // When there's real data, render as usual
       const data = result
         ? {
-            location:  result.city,
+            location:  result.city || result.location,
             temperature: result.temperature,
             description: result.description,
             humidity:    result.humidity,
-            wind:        result.wind_speed,
-            feelsLike:   result.temperature + 1,
+            wind:        result.wind,
+            feelsLike:   result.feelsLike ?? result.temperature,
           }
         : {
-            // fallback to input-args for the very first tick
             location:    args.city,
             temperature: args.temperature,
             description: args.description,
@@ -241,7 +266,7 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
           description={data.description}
           humidity={data.humidity}
           wind={data.wind}
-          feelsLike={data.temperature}
+          feelsLike={data.feelsLike}
         />
       );
     },
@@ -258,11 +283,11 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
       { name: "location", type: "string", required: false },
       { name: "isp", type: "string", required: false },
     ],
-    render: ({ args }) => {
+    render: ({ result, args }) => {
       return <IPCard 
-        ip={args.ip as string}
-        location={args.location}
-        isp={args.isp}
+        ip={result?.ip as string}
+        location={result?.location}
+        isp={result?.isp}
         themeColor={themeColor}
         textColor={textColor}
       />
@@ -299,10 +324,33 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
       { name: "change_24h", type: "string", required: false },
     ],
     render: ({ result, args }) => {
+      // Check for early/empty render, show a fetching state instead of CryptoCard
+      const isFetching = !result;
+      const hasNoData = !args.price_usd && !result?.price_usd;
+
+      if (isFetching && hasNoData) {
+        // Minimal fetching state for crypto price
+        return (
+          <div
+            className="flex items-center justify-center p-8"
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              borderRadius: "1.5em",
+              minHeight: "8em",
+            }}
+          >
+            <span className="text-white/70 text-base">
+              Fetching <b>{args.symbol || "crypto"}</b> price...
+            </span>
+          </div>
+        );
+      }
+
+      // When there's real data, render as usual
       return <CryptoCard
-        symbol={result.cryptocurrency as string}
-        price={result.price_usd as string}
-        change24h={result.change_24h as string}
+        symbol={result?.cryptocurrency || args.symbol as string}
+        price={result?.price_usd || args.price_usd as string}
+        change24h={result?.change_24h || args.change_24h as string}
         themeColor={themeColor}
         textColor={textColor}
       />
@@ -319,7 +367,7 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
       { name: "url", type: "string", required: false },
       { name: "explanation", type: "string", required: false },
     ],
-    render: ({ args }) => {
+    render: ({ result, args }) => {
       return <NASACard
         title={args.title as string}
         date={args.date as string}
@@ -371,12 +419,12 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
       { name: "to_unit", type: "string", required: true },
       { name: "original_value", type: "string", required: false },
     ],
-    render: ({ args }) => {
+    render: ({ result, args }) => {
       return <UnitConversionCard
-        fromValue={args.original_value || '1'}
-        fromUnit={args.from_unit as string}
-        toValue={args.result as string}
-        toUnit={args.to_unit as string}
+        fromValue={result?.value || '1'}
+        fromUnit={result?.from as string}
+        toValue={result?.result as string}
+        toUnit={result?.to as string}
         type="general"
         themeColor={themeColor}
         textColor={textColor}
@@ -510,10 +558,10 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
       { name: "short_url", type: "string", required: true },
       { name: "original_url", type: "string", required: false },
     ],
-    render: ({ args }) => {
+    render: ({ result }) => {
       return <URLCard
-        shortUrl={args.short_url as string}
-        originalUrl={args.original_url as string}
+        shortUrl={result?.short_url as string}
+        originalUrl={result?.original_url as string}
         themeColor={themeColor}
         textColor={textColor}
       />
@@ -572,6 +620,29 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
       { name: "results", type: "string", required: true }, // JSON string of results array
     ],
     render: ({ result, args }) => {
+      // Check for early/empty render, show a fetching state instead of SearchCard
+      const isFetching = !result;
+      const hasNoData = !args.answer && !args.results;
+
+      if (isFetching && hasNoData) {
+        // Minimal fetching state for news search
+        return (
+          <div
+            className="flex items-center justify-center p-8"
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              borderRadius: "1.5em",
+              minHeight: "8em",
+            }}
+          >
+            <span className="text-white/70 text-base">
+              Searching news for <b>{args.query || "..."}</b>...
+            </span>
+          </div>
+        );
+      }
+
+      // When there's real data, render as usual
       let results;
       try {
         results = typeof result.results === 'string' ? JSON.parse(result.results) : result.results;
@@ -628,12 +699,13 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
       { name: "to_unit", type: "string", required: true },
       { name: "original_value", type: "string", required: false },
     ],
-    render: ({ args }) => {
+    render: ({ result }) => {
+      const isFetching = !result || "Loading...";
       return <UnitConversionCard
-        fromValue={args.original_value || '1'}
-        fromUnit={args.from_unit as string}
-        toValue={args.result as string}
-        toUnit={args.to_unit as string}
+        fromValue={result?.value|| '1'}
+        fromUnit={result?.from as string}
+        toValue={result?.result as string}
+        toUnit={result?.to as string}
         type="land"
         themeColor={themeColor}
         textColor={textColor}
