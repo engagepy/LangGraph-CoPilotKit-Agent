@@ -1,28 +1,30 @@
+// app/api/route.ts
+import { NextRequest } from 'next/server'
 import {
   CopilotRuntime,
   ExperimentalEmptyAdapter,
   copilotRuntimeNextJSAppRouterEndpoint,
-  LangGraphAgent
-} from "@copilotkit/runtime";
-import { NextRequest } from "next/server";
+  LangGraphAgent,
+} from '@copilotkit/runtime'
 
-const serviceAdapter = new ExperimentalEmptyAdapter();
+const serviceAdapter = new ExperimentalEmptyAdapter()
 
+// Create runtime with LangGraph agent
 const runtime = new CopilotRuntime({
   agents: {
     agent: new LangGraphAgent({
-      deploymentUrl: "http://127.0.0.1:2024", // or "http://localhost:2024"
-      graphId: "agent"
-    })
-  }
-});
+      deploymentUrl: process.env.LANGGRAPH_URL || 'http://127.0.0.1:2024',
+      graphId: 'agent',
+    }),
+  },
+})
 
 export const POST = async (req: NextRequest) => {
   const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
     runtime,
     serviceAdapter,
-    endpoint: "/api/copilotkit",
-  });
+    endpoint: '/api/copilotkit',
+  })
 
-  return handleRequest(req);
-};
+  return handleRequest(req)
+}

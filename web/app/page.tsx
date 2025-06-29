@@ -167,75 +167,83 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
     },
   });
 
-  useCopilotAction({
-    name: "addProverb",
-    parameters: [{
-      name: "proverb",
-      description: "The proverb to add. Make it witty, short and concise.",
-      required: true,
-    }],
-    handler: ({ proverb }) => {
-      setState({
-        ...state,
-        chatStarted: true,
-        proverbs: [...state.proverbs, proverb],
-      });
-    },
-  });
+
 
   //🪁 Generative UI: https://docs.copilotkit.ai/coagents/generative-ui
   // Weather UI Component
   useCopilotAction({
-    name: "get_weather",
-    description: "Get the weather for a given location.",
+    name:        'get_weather',
+    description: 'Get the weather for a given location.',
     parameters: [
-      { name: "city", type: "string", required: true },
-      { name: "temperature", type: "string", required: false },
-      { name: "description", type: "string", required: false },
-      { name: "humidity", type: "string", required: false },
-      { name: "wind_speed", type: "string", required: false },
+      { name: 'city',        type: 'string', required: true  },
+      { name: 'temperature', type: 'string', required: false },
+      { name: 'description', type: 'string', required: false },
+      { name: 'humidity',    type: 'string', required: false },
+      { name: 'wind',        type: 'string', required: false },
     ],
-    handler: ({ city, temperature, description, humidity, wind_speed }) => {
-      console.log("Weather handler called with:", { city, temperature, description, humidity, wind_speed });
-      
-      // Add to main area tool results
+    handler: ({ city, temperature, description, humidity, wind }) => {
       const weatherResult: WeatherResult = {
-        id: `weather-${Date.now()}`,
-        type: 'weather',
-        location: city || "",
-        temperature,
-        description,
-        humidity,
-        wind: wind_speed,
-        feelsLike: temperature, // Use temperature as feels like since backend doesn't provide it
-        timestamp: Date.now()
+        id:          `weather-${Date.now()}`,
+        type:        'weather',
+        location:    city,
+        temperature: temperature  || '',
+        description: description  || '',
+        humidity:    humidity     || '',
+        wind:        wind         || '',
+        feelsLike:   temperature  || '',
+        timestamp:   Date.now(),
       };
-      
-      console.log("Adding weather result:", weatherResult);
-      console.log("Current state before update:", state);
-      
-      // Force the state update
-      const newState = {
-        ...state,
-        chatStarted: true,
-        toolResults: [weatherResult, ...state.toolResults]
-      };
-      
-      console.log("New state:", newState);
-      setState(newState);
+  
+      setState(prev => {
+        if (!prev) {
+          return {
+            chatStarted: true,
+            toolResults: [weatherResult],
+            proverbs:    [],  // keep TS happy
+          };
+        }
+        return {
+          ...prev,
+          chatStarted: true,
+          toolResults: [weatherResult, ...prev.toolResults],
+        };
+      });
+  
+      return weatherResult;
     },
-    render: ({ args }) => {
-      console.log("Weather render called with args:", args);
-      return <WeatherCard 
-        location={args.city || ""} 
-        themeColor={themeColor}
-        textColor={textColor}
-        temperature={args.temperature}
-        description={args.description}
-        humidity={args.humidity}
-        wind={args.wind_speed}
-        feelsLike={args.temperature}
-      />
+    render: ({ result, args }) => {
+      // **guard**: don’t try to read result before it’s set
+      const data = result
+        ? {
+            location:  result.city,
+            temperature: result.temperature,
+            description: result.description,
+            humidity:    result.humidity,
+            wind:        result.wind_speed,
+            feelsLike:   result.temperature + 1,
+          }
+        : {
+            // fallback to input-args for the very first tick
+            location:    args.city,
+            temperature: args.temperature,
+            description: args.description,
+            humidity:    args.humidity,
+            wind:        args.wind,
+            feelsLike:   args.temperature,
+          };
+  
+      return (
+        <WeatherCard
+          location={data.location}
+          themeColor={themeColor}
+          textColor={textColor}
+          temperature={data.temperature}
+          description={data.description}
+          humidity={data.humidity}
+          wind={data.wind}
+          feelsLike={data.temperature}
+        />
+      );
     },
   });
 
@@ -287,14 +295,14 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
     description: "Display cryptocurrency price information.",
     parameters: [
       { name: "symbol", type: "string", required: true },
-      { name: "price", type: "string", required: true },
+      { name: "price_usd", type: "string", required: true },
       { name: "change_24h", type: "string", required: false },
     ],
-    render: ({ args }) => {
+    render: ({ result, args }) => {
       return <CryptoCard
-        symbol={args.symbol as string}
-        price={args.price as string}
-        change24h={args.change_24h as string}
+        symbol={result.cryptocurrency as string}
+        price={result.price_usd as string}
+        change24h={result.change_24h as string}
         themeColor={themeColor}
         textColor={textColor}
       />
@@ -563,18 +571,18 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
       { name: "answer", type: "string", required: false },
       { name: "results", type: "string", required: true }, // JSON string of results array
     ],
-    render: ({ args }) => {
+    render: ({ result, args }) => {
       let results;
       try {
-        results = typeof args.results === 'string' ? JSON.parse(args.results) : args.results;
+        results = typeof result.results === 'string' ? JSON.parse(result.results) : result.results;
       } catch (e) {
-        results = args.results;
+        results = result.results;
       }
       
       return <SearchCard
         type="news"
-        query={args.query as string}
-        answer={args.answer as string}
+        query={result.query as string}
+        answer={result.answer as string}
         results={Array.isArray(results) ? results : results ? [results] : undefined}
         themeColor={themeColor}
         textColor={textColor}

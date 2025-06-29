@@ -3,37 +3,55 @@ import { Newspaper, ExternalLink } from "lucide-react";
 import { BaseCard } from "./BaseCard";
 
 export type NewsCardProps = {
-  title: string;
-  summary: string;
+  title?: string;
+  summary?: string;
   source?: string;
   url?: string;
   themeColor: string;
+  textColor?: string;
 };
 
-const NewsCard: React.FC<NewsCardProps> = ({ title, summary, source, url, themeColor }) => {
+const NewsCard: React.FC<NewsCardProps> = ({
+  title = "Untitled News",
+  summary = "No summary available.",
+  source,
+  url,
+  themeColor,
+  textColor = "#fff",
+}) => {
   return (
     <BaseCard
-      icon={<Newspaper className="w-12 h-12 text-blue-200" />}
+      icon={<Newspaper className="w-12 h-12" style={{ color: textColor, opacity: 0.9 }} />}
       title={title}
       subtitle={source ? `Source: ${source}` : "News Article"}
-      themeColor={themeColor}
-    >
-      <div className="mt-3 mb-4">
-        <p className="text-white/90 text-sm leading-relaxed">
-          {summary.slice(0, 180)}...
+      mainValue={null}
+      details={
+        <p
+          className="text-base"
+          style={{
+            color: textColor,
+            opacity: 0.92,
+            marginBottom: '0.5em',
+            lineHeight: '1.5',
+          }}>
+          {summary?.length > 200 ? summary.slice(0, 200) + "..." : summary}
         </p>
-      </div>
-      
+      }
+      themeColor={themeColor}
+      textColor={textColor}
+    >
       {url && (
-        <div className="mt-4 pt-4 border-t border-white/30">
-          <a 
-            href={url} 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="flex items-center justify-center space-x-2 bg-white/20 hover:bg-white/30 transition-colors p-2 rounded-lg"
+        <div className="mt-4 pt-4 border-t flex items-center justify-center"
+          style={{ borderColor: textColor, opacity: 0.3 }}>
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 bg-white/10 hover:bg-white/20 transition-colors p-2 rounded-lg"
+            style={{ color: textColor, textDecoration: "underline", fontWeight: 500 }}
           >
-            <ExternalLink className="w-4 h-4 text-white" />
-            <span className="text-white text-sm">Read Full Article</span>
+            <ExternalLink className="w-4 h-4" />
+            <span>Read Full Article</span>
           </a>
         </div>
       )}
@@ -41,4 +59,4 @@ const NewsCard: React.FC<NewsCardProps> = ({ title, summary, source, url, themeC
   );
 };
 
-export default NewsCard; 
+export default NewsCard;
