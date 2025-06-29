@@ -610,54 +610,73 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
     },
   });
 
-  // News Search UI Component  
   useCopilotAction({
-    name: "search_news",
-    description: "Display news search results.",
+    name: "search_news", // Or "web_search"
+    description: "Display news/web search results.",
     parameters: [
       { name: "query", type: "string", required: true },
       { name: "answer", type: "string", required: false },
       { name: "results", type: "string", required: true }, // JSON string of results array
     ],
     render: ({ result, args }) => {
-      // Check for early/empty render, show a fetching state instead of SearchCard
-      const isFetching = !result;
-      const hasNoData = !args.answer && !args.results;
-
-      if (isFetching && hasNoData) {
-        // Minimal fetching state for news search
-        return (
-          <div
-            className="flex items-center justify-center p-8"
-            style={{
-              background: "rgba(255,255,255,0.04)",
-              borderRadius: "1.5em",
-              minHeight: "8em",
-            }}
-          >
-            <span className="text-white/70 text-base">
-              Searching news for <b>{args.query || "..."}</b>...
-            </span>
-          </div>
-        );
-      }
-
-      // When there's real data, render as usual
-      let results;
+      // Always parse query/answer/results, fallback to args or empty
+      const query = result?.query || args?.query || "";
+      const answer = result?.answer || args?.answer || "";
+      let resultsArr = [];
       try {
-        results = typeof result.results === 'string' ? JSON.parse(result.results) : result.results;
-      } catch (e) {
-        results = result.results;
+        resultsArr =
+          typeof result?.results === "string"
+            ? JSON.parse(result.results)
+            : result?.results || [];
+      } catch {
+        resultsArr = [];
       }
-      
-      return <SearchCard
-        type="news"
-        query={result.query as string}
-        answer={result.answer as string}
-        results={Array.isArray(results) ? results : results ? [results] : undefined}
-        themeColor={themeColor}
-        textColor={textColor}
-      />
+  
+      return (
+        <SearchCard
+          type={result?.name === "web_search" ? "web" : "news"}
+          query={query}
+          answer={answer}
+          results={resultsArr}
+          themeColor={themeColor}
+          textColor={textColor}
+        />
+      );
+    },
+  });
+
+  useCopilotAction({
+    name: "web_search", // Or "web_search"
+    description: "Display news/web search results.",
+    parameters: [
+      { name: "query", type: "string", required: true },
+      { name: "answer", type: "string", required: false },
+      { name: "results", type: "string", required: true }, // JSON string of results array
+    ],
+    render: ({ result, args }) => {
+      // Always parse query/answer/results, fallback to args or empty
+      const query = result?.query || args?.query || "";
+      const answer = result?.answer || args?.answer || "";
+      let resultsArr = [];
+      try {
+        resultsArr =
+          typeof result?.results === "string"
+            ? JSON.parse(result.results)
+            : result?.results || [];
+      } catch {
+        resultsArr = [];
+      }
+  
+      return (
+        <SearchCard
+          type={result?.name === "web_search" ? "web" : "web"}
+          query={query}
+          answer={answer}
+          results={resultsArr}
+          themeColor={themeColor}
+          textColor={textColor}
+        />
+      );
     },
   });
 
@@ -670,18 +689,18 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
       { name: "answer", type: "string", required: false },
       { name: "results", type: "string", required: true }, // JSON string of results array
     ],
-    render: ({ args }) => {
+    render: ({ result }) => {
       let results;
       try {
-        results = typeof args.results === 'string' ? JSON.parse(args.results) : args.results;
+        results = typeof result.results === 'string' ? JSON.parse(result.results) : result.results;
       } catch (e) {
-        results = args.results;
+        results = result.results;
       }
       
       return <SearchCard
         type="academic"
-        query={args.query as string}
-        answer={args.answer as string}
+        query={result.query as string}
+        answer={result.results as string}
         results={Array.isArray(results) ? results : results ? [results] : undefined}
         themeColor={themeColor}
         textColor={textColor}

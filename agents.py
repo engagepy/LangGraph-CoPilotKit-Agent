@@ -33,7 +33,7 @@ tools = [
 ]
 
 # Define LLM with bound tools
-llm = ChatOpenAI()
+llm = ChatOpenAI(model="gpt-4o")
 llm_with_tools = llm.bind_tools(tools)
 
 # System message

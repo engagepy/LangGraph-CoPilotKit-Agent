@@ -45,9 +45,9 @@ export const SearchCard: React.FC<SearchCardProps> = ({
       mainValue={answer ? <span className="text-base leading-relaxed">{answer.slice(0, 120)}...</span> : undefined}
       themeColor={themeColor}
     >
-      {results && results.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-white/30 space-y-3">
-          {results.slice(0, 2).map((result, index) => (
+      {results && results.length > 0 ? (
+        <div className="mt-4 pt-4 border-t border-white/30 space-y-3 max-h-72 overflow-y-auto custom-scrollbar">
+          {results.map((result, index) => (
             <div key={index} className="bg-white/10 p-3 rounded-lg">
               <a 
                 href={result.url} 
@@ -64,13 +64,19 @@ export const SearchCard: React.FC<SearchCardProps> = ({
               )}
             </div>
           ))}
-          {results.length > 2 && (
-            <div className="text-center text-xs text-white/70">
-              +{results.length - 2} more results
+        </div>
+      ) : (
+        <div className="mt-4 pt-4 border-t border-white/30 flex items-center justify-center min-h-[4rem]">
+          <div className="flex items-center space-x-2">
+            <div className="flex space-x-1">
+              <div className="w-2 h-2 bg-white/70 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+              <div className="w-2 h-2 bg-white/70 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+              <div className="w-2 h-2 bg-white/70 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
             </div>
-          )}
+            <span className="text-white/70 text-base">Loading...</span>
+          </div>
         </div>
       )}
     </BaseCard>
   );
-}; 
+};
