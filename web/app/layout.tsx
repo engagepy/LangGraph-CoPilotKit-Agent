@@ -1,7 +1,7 @@
 import "@copilotkit/react-ui/styles.css";
 import "./globals.css";
-import React, { ReactNode } from "react";
 import { CopilotKit } from "@copilotkit/react-core";
+import { ReactNode } from "react";
 
 // Where CopilotKit will proxy requests to. If you're using Copilot Cloud, this environment variable will be empty.
 const runtimeUrl = process.env.NEXT_PUBLIC_COPILOTKIT_RUNTIME_URL;

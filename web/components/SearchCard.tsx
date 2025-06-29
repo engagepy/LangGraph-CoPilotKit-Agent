@@ -49,7 +49,7 @@ export const SearchCard: React.FC<SearchCardProps> = ({
       textColor={textColor}
     >
       {results && results.length > 0 ? (
-        <div className="mt-4 pt-4 border-t space-y-3 max-h-72 overflow-y-auto custom-scrollbar" style={{ borderColor: textColor, opacity: 0.3 }}>
+        <div className="mt-4 pt-4 border-t space-y-3 max-h-72 overflow-y-auto custom-scrollbar" style={{ borderColor: textColor }}>
           {results.map((result, index) => (
             <div key={index} className="bg-white/10 p-3 rounded-lg">
               <a 

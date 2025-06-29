@@ -10,6 +10,7 @@ export interface BaseCardProps {
   children?: React.ReactNode;
   className?: string;
   textColor?: string;
+  prompts?: string[];
 }
 
 export const BaseCard: React.FC<BaseCardProps> = ({
@@ -20,6 +21,7 @@ export const BaseCard: React.FC<BaseCardProps> = ({
   details,
   themeColor,
   children,
+  prompts = [],
   className = "",
   textColor = "#fff",
 }) => {

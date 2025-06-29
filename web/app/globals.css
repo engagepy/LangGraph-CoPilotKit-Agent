@@ -5,6 +5,8 @@
 @import "tw-animate-css";
 
 :root {
+  --custom-theme: true;
+  --user-message-color: var(--primary-foreground);
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -39,7 +41,36 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+/* --- Add this to your global CSS file! --- */
+/* --- Add this to your global CSS file! --- */
+/* .flip-card {
+  perspective: 1200px;
+}
+.flip-card-inner {
+  transition: transform 0.7s cubic-bezier(.4,2,.3,1);
+  transform-style: preserve-3d;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.flip-card.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+.flip-card-front,
+.flip-card-back {
+  backface-visibility: hidden;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.flip-card-back {
+  transform: rotateY(180deg);
+} */
+
 .dark {
+  --custom-theme: true;
+  --user-message-color: var(--primary-foreground);
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -142,3 +173,22 @@ div:has(span[children="Powered by CopilotKit"]) {
 .dark [class*="copilot-sidebar"]:after {
   color: #ccc;
 } 
+
+/* Use theme‑foreground so colour matches current mode
+   (white text in dark / purple theme, dark text in light). */
+/* User bubbles: use primary‑foreground so text is white on the default purple
+   bubble, but still theme‑aware if you change the colour scale. */
+.copilotKitUserMessage,
+   .copilotKitMessage.copilotKitUserMessage {
+     color: var(--user-message-color) !important;
+   }
+
+.dark .copilotKitUserMessage,
+  .dark .copilotKitMessage.copilotKitUserMessage {
+  color: black !important;
+   }
+
+.custom-theme .copilotKitUserMessage,
+  .custom-theme .copilotKitMessage.copilotKitUserMessage {
+  color: white !important;
+}

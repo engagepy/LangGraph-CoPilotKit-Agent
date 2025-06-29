@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useCoAgent, useCopilotAction } from "@copilotkit/react-core";
 import { CopilotKitCSSProperties, CopilotSidebar } from "@copilotkit/react-ui";
 import { ToolResultCard, ToolCard } from "../components/ToolResultCards";
@@ -19,6 +18,9 @@ import { DefinitionCard } from "../components/DefinitionCard";
 import WeatherCard from "../components/WeatherCard";
 import NewsCard from "../components/NewsCard";
 import IPCard from "../components/IPCard";
+import { ClipboardCopy, ArrowRight } from "lucide-react"; 
+import "../app/globals.css";
+
 
 // Tool result types
 type WeatherResult = {
@@ -74,6 +76,11 @@ export default function CopilotKitPage() {
     setThemeColor(presetColors[nextIndex]);
   };
 
+  useEffect(() => {
+    const userMessageColor = themeColor === "#6366f1" ? "#fff" : "#000";
+    document.documentElement.style.setProperty('--user-message-color', userMessageColor);
+  }, [themeColor]);
+
   // 🪁 Frontend Actions: https://docs.copilotkit.ai/guides/frontend-actions
   useCopilotAction({
     name: "setThemeColor",
@@ -105,14 +112,40 @@ export default function CopilotKitPage() {
         onClick={handleCycleColor}
         className="fixed top-4 left-4 z-50 px-5 py-2 rounded-full font-semibold shadow-lg border border-gray-200 transition-colors duration-200"
         style={{
-          background: "#fff",
-          color: "#444",
+          background: "#6366f1",
+          color: "#fff",
           boxShadow: "0 2px 12px 0 rgba(0,0,0,0.08)",
           fontSize: "1rem",
           letterSpacing: "0.01em",
         }}
       >
-        Cycle Theme Color
+        Cycle Theme
+      </button>
+      <button
+        onClick={() => window.open("https://github.com/engagepy/LangGraph-Multi-Tool-Agent/tree/main", "_blank", "noopener,noreferrer")}
+        className="fixed top-20 left-4 z-50 px-5 py-2 rounded-full font-semibold shadow-lg border border-gray-200 transition-colors duration-200"
+        style={{
+          background: "#6366f1",
+          color: "#fff",
+          boxShadow: "0 2px 12px 0 rgba(0,0,0,0.08)",
+          fontSize: "1rem",
+          letterSpacing: "0.01em",
+          minWidth: "142.5px",
+        }}
+      >
+        <svg
+          className="w-5 h-5 inline-block mr-2"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            fillRule="evenodd"
+            d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+            clipRule="evenodd"
+          />
+        </svg>
+        GitHub
       </button>
       {/* Sidebar - overlay style */}
       <div className="peer">
@@ -933,70 +966,95 @@ function ToolResultRenderer({ result, themeColor, textColor }: { result: ToolRes
 }
 
 // Example cards for the main screen
-function ExampleCards({ themeColor }: { themeColor: string }) {
+
+const EX = {
+  weather: ["Weather London?", "Raining in Ranchi?", "Goa 7-day forecast?"],
+  math: ["25^3?", "√98765?", "1345+9827?"],
+  web: ["AI breakthroughs?", "Hydrogen car news?", "Latest tech trends?"],
+  currency: ["2500 INR to USD?", "Bitcoin price?", "100 EUR to JPY?"],
+  holidays: ["India 2025 holidays?", "When is Diwali?", "US July holidays?"],
+  nasa: ["Today's APOD?", "Popular Hubble image?", "Mars rover pic?"],
+  crypto: ["Bitcoin price?", "Ethereum market cap?", "Dogecoin to USD?"],
+  qr: ["Generate QR for google.com?", "QR code for my phone number?", "QR for WiFi network?"],
+  url: ["Shorten bit.ly/example?", "Expand tinyurl.com/abc?", "URL info for github.com?"],
+  timezone: ["Time in Tokyo?", "London to New York time?", "Current time in Sydney?"],
+  wiki: ["Wikipedia: Albert Einstein?", "Search: Quantum physics?", "Wiki: Machine learning?"],
+  github: ["GitHub user: octocat?", "Repo: facebook/react?", "Trending repos this week?"],
+  unit: ["Convert 10 miles to km?", "100 pounds to kg?", "32°F to Celsius?"],
+  definition: ["Define: algorithm?", "What is blockchain?", "Meaning of API?"],
+  news: ["Latest tech news?", "Breaking world news?", "Sports headlines today?"],
+  ip: ["What's my IP?", "IP location lookup?", "IP info for 8.8.8.8?"],
+};
+
+export function ExampleCards({ themeColor }: { themeColor: string }) {
   return (
     <div className="flex flex-col items-center justify-center gap-6 py-12">
-      <h2 className="text-5xl font-black text-white mb-2 tracking-tighter bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-lg">Turtl🐢ai </h2>
+      <h2 className="text-5xl font-black text-white mb-2 tracking-tighter bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-lg">Turtl🐢ai</h2>
       <p className="text-lg text-gray-200 mb-6 max-w-xl text-center">
         Your all-in-one assistant for calculations, research, utilities, and more. Try one of the tools below or ask anything!
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <ToolCard
-          icon={<span className="text-4xl">☀️</span>}
+          icon={<span>☀️</span>}
           title="Weather"
-          subtitle="Get current weather info for any city."
-          mainValue={<span className="text-2xl">72°</span>}
-          details={<span>Clear skies in San Francisco</span>}
+          subtitle="Get weather info."
+          mainValue={<span>72°</span>}
+          details={<span>Clear skies in SF</span>}
           themeColor={themeColor}
+          prompts={EX.weather}
         />
         <ToolCard
-          icon={<span className="text-4xl">🔢</span>}
+          icon={<span>🔢</span>}
           title="Math & Calculations"
-          subtitle="Add, multiply, or convert units."
-          mainValue={<span className="text-2xl">100 × 3 = 300</span>}
-          details={<span>Quick, accurate math</span>}
+          subtitle="Add, multiply, etc."
+          mainValue={<span>100 × 3 = 300</span>}
+          details={<span>Quick math</span>}
           themeColor={themeColor}
+          prompts={EX.math}
         />
         <ToolCard
-          icon={<span className="text-4xl">🌐</span>}
+          icon={<span>🌐</span>}
           title="Web Search"
-          subtitle="Find news, facts, and more."
-          mainValue={<span className="text-2xl">AI News</span>}
+          subtitle="Find news & facts."
+          mainValue={<span>AI News</span>}
           details={<span>"OpenAI launches new model"</span>}
           themeColor={themeColor}
+          prompts={EX.web}
         />
         <ToolCard
-          icon={<span className="text-4xl">💱</span>}
+          icon={<span>💱</span>}
           title="Currency Converter"
-          subtitle="Convert between currencies."
-          mainValue={<span className="text-2xl">100 USD → 92 EUR</span>}
+          subtitle="Convert currencies."
+          mainValue={<span>100 USD → 92 EUR</span>}
           details={<span>Live rates</span>}
           themeColor={themeColor}
+          prompts={EX.currency}
         />
         <ToolCard
-          icon={<span className="text-4xl">📅</span>}
+          icon={<span>📅</span>}
           title="Public Holidays"
-          subtitle="See holidays for any country."
-          mainValue={<span className="text-2xl">India: Diwali</span>}
-          details={<span>Nov 12, 2024</span>}
+          subtitle="Show holidays."
+          mainValue={<span>India: Diwali</span>}
+          details={<span>Nov&nbsp;12,&nbsp;2024</span>}
           themeColor={themeColor}
+          prompts={EX.holidays}
         />
         <ToolCard
-          icon={<span className="text-4xl">🚀</span>}
+          icon={<span>🚀</span>}
           title="NASA APOD"
-          subtitle="Astronomy Picture of the Day."
-          mainValue={<span className="text-2xl">"Pillars of Creation"</span>}
-          details={<span>Stunning space imagery</span>}
+          subtitle="Picture of the Day."
+          mainValue={<span>"Pillars..."</span>}
+          details={<span>Space imagery</span>}
           themeColor={themeColor}
+          prompts={EX.nasa}
         />
       </div>
       <div className="mt-8 text-white/80 text-center text-sm">
-        <div>Try: <span className="bg-white/20 px-2 py-1 rounded">What's the weather in Paris?</span> or <span className="bg-white/20 px-2 py-1 rounded">Convert 10 miles to kilometers</span></div>
+        <div>Try: <span className="bg-white/20 px-2 py-1 rounded">What's the weather in Paris?</span> or <span className="bg-white/20 px-2 py-1 rounded">Convert 10 miles to km</span></div>
       </div>
     </div>
   );
 }
-
 // Simple sun icon for the weather card
 function SunIcon() {
   return (
