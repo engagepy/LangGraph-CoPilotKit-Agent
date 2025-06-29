@@ -651,7 +651,7 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
         // Tool results area
         <div className="w-full h-full p-6 overflow-y-auto">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-white mb-6 text-center">Welcome to Turtl.ai</h2>
+            <h2 className="text-5xl font-black text-white mb-6 text-center tracking-tighter bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-lg">Turtl.ai</h2>
             
             {state.toolResults.length === 0 ? (
               <div className="bg-white/20 backdrop-blur-md p-8 rounded-2xl shadow-xl text-center">
@@ -699,7 +699,7 @@ function ToolResultRenderer({ result, themeColor, textColor }: { result: ToolRes
 function ExampleCards({ themeColor }: { themeColor: string }) {
   return (
     <div className="flex flex-col items-center justify-center gap-6 py-12">
-      <h2 className="text-3xl font-bold text-white mb-2">Welcome to Turtl.ai 🐢</h2>
+      <h2 className="text-5xl font-black text-white mb-2 tracking-tighter bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-lg">Turtl🐢ai </h2>
       <p className="text-lg text-gray-200 mb-6 max-w-xl text-center">
         Your all-in-one assistant for calculations, research, utilities, and more. Try one of the tools below or ask anything!
       </p>
