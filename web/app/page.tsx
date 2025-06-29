@@ -57,6 +57,7 @@ export default function CopilotKitPage() {
 
   // Add a button to manually test theme color change
   const presetColors = [
+    "#6366f1", // Default Indigo (original)
     "#f5e8ff", // Pastel Lavender
     "#ffe4e1", // Pastel Pink
     "#e0f7fa", // Pastel Cyan
