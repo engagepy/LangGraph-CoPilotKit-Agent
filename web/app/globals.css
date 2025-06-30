@@ -149,7 +149,7 @@ div:has(span[children="Powered by CopilotKit"]) {
 [class*="copilotkit-sidebar"]:after,
 [class*="copilot-sidebar"]:after,
 [data-role="copilot-sidebar"]:after {
-  content: "Built by ZP";
+  content: "Powered by ZP";
   position: absolute;
   bottom: 10px;
   left: 50%;

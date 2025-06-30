@@ -9,9 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@copilotkit/runtime": "latest",
     "@copilotkit/react-core": "latest",
     "@copilotkit/react-ui": "latest",
+    "@copilotkit/runtime": "latest",
+    "@langchain/langgraph-sdk": "^0.0.87",
     "autoprefixer": "^10.4.21",
     "clsx": "^2.1.1",
     "lucide-react": "^0.454.0",

@@ -13,9 +13,9 @@ const serviceAdapter = new ExperimentalEmptyAdapter()
 const runtime = new CopilotRuntime({
   agents: {
     agent: new LangGraphAgent({
-      deploymentUrl: process.env.LANGGRAPH_URL || 'http://127.0.0.1:2024',
+      deploymentUrl: process.env.LANGGRAPH_URL as string,
       graphId: 'agent',
-    }) as any, // Temporary type assertion to resolve compatibility issue
+    }) as any,
   },
 })
 
