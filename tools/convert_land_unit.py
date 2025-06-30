@@ -68,6 +68,20 @@ unit_to_sqft = {
     "kani": 57600,            # alias for cawnie
 }
 
+# Linear length units in metres
+linear_units_m = {
+    "m": 1,
+    "metre": 1, "meter": 1,
+    "cm": 0.01, "centimetre": 0.01, "centimeter": 0.01,
+    "mm": 0.001, "millimetre": 0.001, "millimeter": 0.001,
+    "km": 1000, "kilometre": 1000, "kilometer": 1000,
+    "mi": 1609.34, "mile": 1609.34, "miles": 1609.34,
+    "ft": 0.3048, "foot": 0.3048, "feet": 0.3048,
+    "in": 0.0254, "inch": 0.0254, "inches": 0.0254,
+    "yd": 0.9144, "yard": 0.9144, "yards": 0.9144,
+}
+
+
 bigha_aliases = {"bigha", "bighas"}
 
 def normalise_unit(u: str) -> str:
@@ -80,16 +94,31 @@ def convert_land_unit(
     region: Optional[str] = None
 ) -> Dict:
     """
-    Converts land measurements between any supported units:
-    - Imperial (sqin, sqft, acre, sqmi)
-    - Metric (sqmm, sqcm, sqm, sqkm)
+    Converts land measurements and distance/length between any supported units:
+    - Distance/Length: mm, cm, m, km, in, ft, yd, mi (and their variations)
+    - Imperial area (sqin, sqft, acre, sqmi)
+    - Metric area (sqmm, sqcm, sqm, sqkm)
     - Indian units (kanal, marla, guntha, etc.)
-    - Regional bigha (requires region)
-    Returns {'value', 'from','to','region','result'} on success, or {'error'}.
+    - Regional bigha (requires region parameter)
+    
+    For area conversions, returns {'value', 'from','to','region','result'} on success.
+    For length conversions, returns {'value', 'from','to','result'} on success.
+    Returns {'error'} on failure.
     """
     f_raw, t_raw = from_unit, to_unit
     f = normalise_unit(f_raw)
     t = normalise_unit(t_raw)
+
+        # Handle linear length conversions if both units are linear
+    if f in linear_units_m and t in linear_units_m:
+        # convert value from from_unit to metres, then to to_unit
+        result_val = round(value * linear_units_m[f] / linear_units_m[t], 6)
+        return {
+            "value": value,
+            "from": f_raw,
+            "to": t_raw,
+            "result": result_val
+        }
 
     # Resolve source unit
     if f in bigha_aliases:

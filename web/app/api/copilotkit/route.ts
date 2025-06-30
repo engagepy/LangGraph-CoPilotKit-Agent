@@ -15,7 +15,7 @@ const runtime = new CopilotRuntime({
     agent: new LangGraphAgent({
       deploymentUrl: process.env.LANGGRAPH_URL || 'http://127.0.0.1:2024',
       graphId: 'agent',
-    }),
+    }) as any, // Temporary type assertion to resolve compatibility issue
   },
 })
 

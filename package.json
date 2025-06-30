@@ -1,0 +1,15 @@
+{
+  "name": "lang-agent-multi-1",
+  "version": "1.0.0",
+  "description": "Multi-agent system with LangGraph backend and Next.js frontend",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"langgraph dev --host localhost --port 2024\" \"npm run dev --prefix web\"",
+    "dev:backend": "langgraph dev --host localhost --port 2024",
+    "dev:frontend": "npm run dev --prefix web",
+    "install:frontend": "npm install --prefix web"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+} 

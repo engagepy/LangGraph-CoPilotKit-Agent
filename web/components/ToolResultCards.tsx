@@ -64,7 +64,7 @@ export function ToolResultCard({ toolName, result, themeColor }: ToolResultCardP
           temperature={result.temperature || result.temp}
           description={result.description || result.condition}
           humidity={result.humidity}
-          wind={result.wind_speed || result.wind}
+          wind_speed={result.wind_speed || result.wind}
           feelsLike={result.temperature}
           themeColor={themeColor}
         />

@@ -104,7 +104,7 @@ export default function CopilotKitPage() {
         backgroundColor: themeColor,
         color: textColor,
         '--sidebar-text-color': textColor,
-      }}
+      } as React.CSSProperties}
       className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]"
     >
       {/* Manual theme color test button */}
@@ -496,7 +496,6 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
         country={args.country as string}
         holidays={holidayArray}
         themeColor={themeColor}
-        textColor={textColor}
       />
     },
   });
@@ -673,7 +672,6 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
         summary={args.summary as string}
         url={args.url as string}
         themeColor={themeColor}
-        textColor={textColor}
       />
     },
   });
@@ -698,7 +696,6 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
       return <GitHubCard
         repos={repoArray}
         themeColor={themeColor}
-        textColor={textColor}
       />
     },
   });
@@ -754,7 +751,6 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
         time={args.time as string}
         location={args.location as string}
         themeColor={themeColor}
-        textColor={textColor}
       />
     },
   });
@@ -776,7 +772,6 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
         partOfSpeech={args.part_of_speech as string}
         example={args.example as string}
         themeColor={themeColor}
-        textColor={textColor}
       />
     },
   });
