@@ -9,6 +9,13 @@ import {
 
 const serviceAdapter = new ExperimentalEmptyAdapter()
 
+export const OPTIONS = () => new Response(null, {
+  headers: {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST,OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type,Authorization,X-Api-Key',
+  },
+});
 // Create runtime with LangGraph agent
 const runtime = new CopilotRuntime({
   agents: {
