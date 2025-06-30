@@ -20,7 +20,7 @@ import NewsCard from "../components/NewsCard";
 import IPCard from "../components/IPCard";
 import { ClipboardCopy, ArrowRight } from "lucide-react"; 
 import "../app/globals.css";
-
+import ExampleCards from "../components/ExampleCards";
 
 // Tool result types
 type WeatherResult = {
@@ -965,96 +965,6 @@ function ToolResultRenderer({ result, themeColor, textColor }: { result: ToolRes
   }
 }
 
-// Example cards for the main screen
-
-const EX = {
-  weather: ["Weather London?", "Raining in Ranchi?", "Goa 7-day forecast?"],
-  math: ["25^3?", "√98765?", "1345+9827?"],
-  web: ["AI breakthroughs?", "Hydrogen car news?", "Latest tech trends?"],
-  currency: ["2500 INR to USD?", "Bitcoin price?", "100 EUR to JPY?"],
-  holidays: ["India 2025 holidays?", "When is Diwali?", "US July holidays?"],
-  nasa: ["Today's APOD?", "Popular Hubble image?", "Mars rover pic?"],
-  crypto: ["Bitcoin price?", "Ethereum market cap?", "Dogecoin to USD?"],
-  qr: ["Generate QR for google.com?", "QR code for my phone number?", "QR for WiFi network?"],
-  url: ["Shorten bit.ly/example?", "Expand tinyurl.com/abc?", "URL info for github.com?"],
-  timezone: ["Time in Tokyo?", "London to New York time?", "Current time in Sydney?"],
-  wiki: ["Wikipedia: Albert Einstein?", "Search: Quantum physics?", "Wiki: Machine learning?"],
-  github: ["GitHub user: octocat?", "Repo: facebook/react?", "Trending repos this week?"],
-  unit: ["Convert 10 miles to km?", "100 pounds to kg?", "32°F to Celsius?"],
-  definition: ["Define: algorithm?", "What is blockchain?", "Meaning of API?"],
-  news: ["Latest tech news?", "Breaking world news?", "Sports headlines today?"],
-  ip: ["What's my IP?", "IP location lookup?", "IP info for 8.8.8.8?"],
-};
-
-export function ExampleCards({ themeColor }: { themeColor: string }) {
-  return (
-    <div className="flex flex-col items-center justify-center gap-6 py-12">
-      <h2 className="text-5xl font-black text-white mb-2 tracking-tighter bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-lg">Turtl🐢ai</h2>
-      <p className="text-lg text-gray-200 mb-6 max-w-xl text-center">
-        Your all-in-one assistant for calculations, research, utilities, and more. Try one of the tools below or ask anything!
-      </p>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <ToolCard
-          icon={<span>☀️</span>}
-          title="Weather"
-          subtitle="Get weather info."
-          mainValue={<span>72°</span>}
-          details={<span>Clear skies in SF</span>}
-          themeColor={themeColor}
-          prompts={EX.weather}
-        />
-        <ToolCard
-          icon={<span>🔢</span>}
-          title="Math & Calculations"
-          subtitle="Add, multiply, etc."
-          mainValue={<span>100 × 3 = 300</span>}
-          details={<span>Quick math</span>}
-          themeColor={themeColor}
-          prompts={EX.math}
-        />
-        <ToolCard
-          icon={<span>🌐</span>}
-          title="Web Search"
-          subtitle="Find news & facts."
-          mainValue={<span>AI News</span>}
-          details={<span>"OpenAI launches new model"</span>}
-          themeColor={themeColor}
-          prompts={EX.web}
-        />
-        <ToolCard
-          icon={<span>💱</span>}
-          title="Currency Converter"
-          subtitle="Convert currencies."
-          mainValue={<span>100 USD → 92 EUR</span>}
-          details={<span>Live rates</span>}
-          themeColor={themeColor}
-          prompts={EX.currency}
-        />
-        <ToolCard
-          icon={<span>📅</span>}
-          title="Public Holidays"
-          subtitle="Show holidays."
-          mainValue={<span>India: Diwali</span>}
-          details={<span>Nov&nbsp;12,&nbsp;2024</span>}
-          themeColor={themeColor}
-          prompts={EX.holidays}
-        />
-        <ToolCard
-          icon={<span>🚀</span>}
-          title="NASA APOD"
-          subtitle="Picture of the Day."
-          mainValue={<span>"Pillars..."</span>}
-          details={<span>Space imagery</span>}
-          themeColor={themeColor}
-          prompts={EX.nasa}
-        />
-      </div>
-      <div className="mt-8 text-white/80 text-center text-sm">
-        <div>Try: <span className="bg-white/20 px-2 py-1 rounded">What's the weather in Paris?</span> or <span className="bg-white/20 px-2 py-1 rounded">Convert 10 miles to km</span></div>
-      </div>
-    </div>
-  );
-}
 // Simple sun icon for the weather card
 function SunIcon() {
   return (
