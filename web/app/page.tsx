@@ -68,6 +68,12 @@ export default function CopilotKitPage() {
     "#fce4ec", // Pastel Rose
     "#e3f2fd", // Pastel Blue
     "#f3e5f5", // Pastel Purple
+    // add dark colors
+    // futurisitic glossy black black 
+    "#000000", // Glossy Black
+    "#1a1a1a", // Glossy Dark Gray
+    
+
   ];
   const [colorIndex, setColorIndex] = useState(0);
   const handleCycleColor = () => {
@@ -152,6 +158,8 @@ export default function CopilotKitPage() {
         <CopilotSidebar
           clickOutsideToClose={false}
           defaultOpen={true}
+          onThumbsUp={(message) => console.log(message)} 
+          onThumbsDown={(message) => console.log(message)}  
           labels={{
             title: "Turtl.ai",
             initial: "👋 Hi, there! You're chatting with an agent. This agent comes with a few tools to get you started.\n\nFor example you can try:\n- **Frontend Tools**: \"Set the theme to orange\"\n- **Shared State**: \"Write a proverb about AI\"\n- **Generative UI**: \"Get the weather in SF\"\n- **Web Search**: \"Search for latest AI news\"\n- **Math Tools**: \"Calculate 15% of 250\"\n- **Weather**: \"What's the weather in Tokyo?\"\n- **Currency**: \"Convert 100 USD to EUR\"\n- **NASA APOD**: \"Show me today's NASA picture\"\n\nAs you interact with the agent, you'll see the UI update in real-time to reflect the agent's **state**, **tool calls**, and **progress**."
