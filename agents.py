@@ -13,7 +13,8 @@ from tools import (
     web_search, search_news, search_academic,
     get_nasa_apod, get_wikipedia_summary, get_public_holidays,
     get_trending_github_repos, shorten_url, generate_qr_code,
-    get_current_timezone, convert_unit, convert_land_unit
+    get_current_timezone, convert_unit, convert_land_unit,
+    gst_calculator, currency_converter, expense_splitter, date_calculator, sync_search_math, ifsc_lookup, pincode_lookup, emi_calculator, what_should_i, pdf_summarizer, income_tax_estimator, pnr_status_checker, roast_my_code
 )
 
 
@@ -29,7 +30,8 @@ tools = [
     web_search, search_news, search_academic,
     get_nasa_apod, get_wikipedia_summary, get_public_holidays,
     get_trending_github_repos, shorten_url, generate_qr_code,
-    get_current_timezone, convert_unit, convert_land_unit
+    get_current_timezone, convert_unit, convert_land_unit,
+    gst_calculator, currency_converter, expense_splitter, date_calculator, sync_search_math, ifsc_lookup, pincode_lookup, emi_calculator, what_should_i, pdf_summarizer, income_tax_estimator, pnr_status_checker, roast_my_code
 ]
 
 # Define LLM with bound tools
