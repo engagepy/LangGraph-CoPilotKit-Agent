@@ -161,7 +161,7 @@ export default function CopilotKitPage() {
           onThumbsUp={(message) => console.log(message)} 
           onThumbsDown={(message) => console.log(message)}  
           labels={{
-            title: "Turtl.ai",
+            title: "🐢.ai",
             initial: "👋 Hi, there! You're chatting with an agent. This agent comes with a few tools to get you started.\n\nFor example you can try:\n- **Frontend Tools**: \"Set the theme to orange\"\n- **Shared State**: \"Write a proverb about AI\"\n- **Generative UI**: \"Get the weather in SF\"\n- **Web Search**: \"Search for latest AI news\"\n- **Math Tools**: \"Calculate 15% of 250\"\n- **Weather**: \"What's the weather in Tokyo?\"\n- **Currency**: \"Convert 100 USD to EUR\"\n- **NASA APOD**: \"Show me today's NASA picture\"\n\nAs you interact with the agent, you'll see the UI update in real-time to reflect the agent's **state**, **tool calls**, and **progress**."
           }}
         />
@@ -924,7 +924,7 @@ function YourMainContent({ themeColor, textColor }: { themeColor: string; textCo
         // Tool results area
         <div className="w-full h-full p-6 overflow-y-auto">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-5xl font-black text-white mb-6 text-center tracking-tighter bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-lg">Turtl.ai</h2>
+            <h2 className="text-5xl font-black text-white mb-6 text-center tracking-tighter bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-lg"></h2>
             
             {state.toolResults.length === 0 ? (
               <div className="bg-white/20 backdrop-blur-md p-8 rounded-2xl shadow-xl text-center">

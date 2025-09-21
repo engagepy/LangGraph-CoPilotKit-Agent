@@ -43,7 +43,7 @@ function MoonIcon() {
 function ExampleCards({ themeColor }: { themeColor: string }) {
   return (
     <div className="flex flex-col items-center justify-center gap-6 py-12">
-      <h2 className="text-5xl font-black text-white mb-2 tracking-tighter bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-lg">Turtl🐢ai</h2>
+      <h2 className="text-5xl font-black text-white mb-2 tracking-tighter bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-lg">🐢</h2>
       <p className="text-lg text-gray-200 mb-6 max-w-xl text-center">
         Your all-in-one assistant for calculations, research, utilities, and more. Try one of the tools below or ask anything!
       </p>
