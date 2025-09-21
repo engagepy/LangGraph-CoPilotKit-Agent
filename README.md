@@ -2,7 +2,8 @@
 
 A comprehensive multi-agent system built with LangGraph that provides a wide range of tools and capabilities through a modular, well-organized architecture.
 
-![alt text](demo-landing.png)
+![alt text](<Screenshot 2025-09-21 at 22.51.27.png>)
+
 
 ## 🚀 Features
 
